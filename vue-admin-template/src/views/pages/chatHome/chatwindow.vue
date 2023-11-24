@@ -17,8 +17,8 @@
         <label for="imgFile">
           <span class="iconfont icon-tupian"></span>
         </label>
-        <input type="file" name="" id="imgFile" @change="sendImg" accept="image/*" />
-        <input type="file" name="" id="docFile" @change="sendFile" accept="application/*,text/*" />
+        <input type="file" name="" id="imgFile" @change="sendImg" accept="image/*"/>
+        <input type="file" name="" id="docFile" @change="sendFile" accept="application/*,text/*"/>
         <!-- accept="application/*" -->
       </div>
     </div>
@@ -27,7 +27,7 @@
         <div class="chat-wrapper" v-for="(item, index) in chatList" :key="item.id">
           <div class="chat-friend" v-if="item.uid !== '1001'">
             <div class="info-time">
-              <img :src="item.headImg" alt="" />
+              <img :src="item.headImg" alt=""/>
               <span>{{ item.name }}</span>
               <span>{{ item.time }}</span>
             </div>
@@ -35,10 +35,12 @@
               <template v-if="isSend && index == chatList.length - 1">
                 <span class="flash_cursor"></span>
               </template>
-              <template v-else><pre>{{ item.msg }}</pre></template>
+              <template v-else>
+                <pre>{{ item.msg }}</pre>
+              </template>
             </div>
             <div class="chat-img" v-if="item.chatType == 1">
-              <img :src="item.msg" alt="表情" v-if="item.extend.imgType == 1" style="width: 100px; height: 100px" />
+              <img :src="item.msg" alt="表情" v-if="item.extend.imgType == 1" style="width: 100px; height: 100px"/>
               <el-image :src="item.msg" :preview-src-list="srcImgList" v-else>
               </el-image>
             </div>
@@ -52,13 +54,13 @@
             <div class="info-time">
               <span>{{ item.name }}</span>
               <span>{{ item.time }}</span>
-              <img :src="item.headImg" alt="" />
+              <img :src="item.headImg" alt=""/>
             </div>
             <div class="chat-text" v-if="item.chatType == 0">
               {{ item.msg }}
             </div>
             <div class="chat-img" v-if="item.chatType == 1">
-              <img :src="item.msg" alt="表情" v-if="item.extend.imgType == 1" style="width: 100px; height: 100px" />
+              <img :src="item.msg" alt="表情" v-if="item.extend.imgType == 1" style="width: 100px; height: 100px"/>
               <el-image
                 style="max-width: 300px; border-radius: 10px"
                 :src="item.msg"
@@ -75,9 +77,9 @@
         </div>
       </div>
       <div class="chatInputs">
-        <input class="inputs" v-model="inputMsg" @keyup.enter="sendText" />
-        <el-button class="send boxinput" :disabled = "isSend" @click="sendText">
-          <img src="@/assets/img/emoji/rocket.png" alt="" />
+        <input class="inputs" v-model="inputMsg" @keyup.enter="sendText"/>
+        <el-button class="send boxinput" :disabled="isSend" @click="sendText">
+          <img src="@/assets/img/emoji/rocket.png" alt=""/>
         </el-button>
       </div>
     </div>
@@ -85,16 +87,18 @@
 </template>
 
 <script>
-import { animation } from '@/utils/util'
+import {animation} from '@/utils/util'
 
 import HeadPortrait from '@/components/HeadPortrait.vue'
 import Emoji from '@/components/Emoji.vue'
 import FileCard from '@/components/FileCard.vue'
+import {addDPic, addPic, chat, diagnosis} from '@/api/user/patient'
+
 export default {
   components: {
     HeadPortrait,
     Emoji,
-    FileCard,
+    FileCard
   },
   props: {
     frinedInfo: Object,
@@ -109,13 +113,14 @@ export default {
   },
   data() {
     return {
+      diaresult: '',
       chatList: [],
-      inputMsg: "",
+      inputMsg: '',
       showEmoji: false,
       friendInfo: {},
       srcImgList: [],
-      isSend: false
-    };
+      isSend: false,
+    }
   },
   mounted() {
     this.getFriendChatMsg();
@@ -128,8 +133,8 @@ export default {
         name: '凤雏',
         time: new Date().toLocaleTimeString(),
         msg: '你好，小凤为你服务',
-        chatType: 0, //信息类型，0文字，1图片
-        uid: '1002' //uid
+        chatType: 0,
+        uid: '1002'
       };
       this.sendMsg(initalMsg);
       this.scrollBottom();
@@ -151,7 +156,7 @@ export default {
       this.showEmoji = !this.showEmoji;
     },
     //发送文字信息
-    sendText() {
+    async sendText() {
       if (this.inputMsg) {
         let chatMsg = {
           headImg: require("@/assets/img/head_portrait.jpg"),
@@ -164,29 +169,26 @@ export default {
         this.sendMsg(chatMsg);
         this.$emit('personCardSort', this.frinedInfo.id)
         this.inputMsg = "";
-        let data = {
-          prompt: chatMsg.msg,
-          temperature: 1,
-          top_p: 1,
-          model: 'text-davinci-003',
-          max_tokens: 2048,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-          stop: ["Human:", "AI:"]
+        let commit = {
+          input: this.inputMsg,
+          diares: this.diaresult
         }
-        this.loading = true
         this.isSend = true;
+        this.loading = true;
         let chatGPT = {
           headImg: require("@/assets/img/head_portrait1.jpg"),
           name: "凤雏",
           time: new Date().toLocaleTimeString(),
-          msg: "",
+          msg: '分析中...',
           chatType: 0, //信息类型，0文字，1图片
           uid: "1002", //uid
         };
-        this.sendMsg(chatGPT);
-        this.isSend = false;
-        this.chatList[this.chatList.length - 1].msg = "好的，已完成。";
+        this.sendMsg(chatGPT)
+        const reply = await chat(commit)
+        this.diaresult = reply.msg
+        this.loading = false
+        this.chatList[this.chatList.length - 1].msg = this.diaresult;
+        this.isSend = false
       } else {
         this.$message({
           message: "消息不能为空哦~",
@@ -194,30 +196,13 @@ export default {
         });
       }
     },
-    //发送表情
-    sendEmoji(msg) {
-      let chatMsg = {
-        headImg: require("@/assets/img/head_portrait.jpg"),
-        name: "大毛是小白",
-        time: "09：12 AM",
-        msg: msg,
-        chatType: 1, //信息类型，0文字，1图片
-        extend: {
-          imgType: 1, //(1表情，2本地图片)
-        },
-        uid: "1001",
-      };
-      this.sendMsg(chatMsg);
-      this.clickEmoji();
-    },
     //发送本地图片
-    sendImg(e) {
+    sendImg: async function (e) {
       let _this = this;
-      console.log(e.target.files);
       let chatMsg = {
         headImg: require("@/assets/img/head_portrait.jpg"),
         name: "大毛是小白",
-        time: "09：12 AM",
+        time: new Date().toLocaleTimeString(),
         msg: "",
         chatType: 1, //信息类型，0文字，1图片, 2文件
         extend: {
@@ -225,63 +210,54 @@ export default {
         },
         uid: "1001",
       };
-      let files = e.target.files[0]; //图片文件名
+      let Picdata = {
+        patientid: '',
+        Pic: ''
+      }
+      let DPicdata = {
+        diagnosisTime: '',
+        Pic: '',
+        picName: ''
+      }
+      let files = e.target.files[0]; // 图片文件名
+      DPicdata['picName'] = files.name
+      let patientid = this.$route.query.patientid
+      let diagnosisTime = this.$route.query.diagnosisTime
+      Picdata['patientid'] = patientid
+      DPicdata['diagnosisTime'] = diagnosisTime
       if (!e || !window.FileReader) return; // 看是否支持FileReader
-      let reader = new FileReader();
-      reader.readAsDataURL(files); // 关键一步，在这里转换的
-      reader.onloadend = function () {
-        chatMsg.msg = this.result; //赋值
+      let reader = new FileReader()
+      reader.readAsDataURL(files) // 关键一步，在这里转换的
+      reader.onloadend = async function () {
+        chatMsg.msg = this.result // 赋值
+        Picdata['Pic'] = this.result
+        DPicdata['Pic'] = this.result
         _this.srcImgList.push(chatMsg.msg);
+        await addPic(Picdata)
+        await addDPic(DPicdata)
+      }
+      this.sendMsg(chatMsg)
+      e.target.files = null
+      this.isSend = true;
+      this.loading = true;
+      let chatGPT = {
+        headImg: require("@/assets/img/head_portrait1.jpg"),
+        name: "凤雏",
+        time: new Date().toLocaleTimeString(),
+        msg: '分析中...',
+        chatType: 0, //信息类型，0文字，1图片
+        uid: "1002", //uid
       };
-      this.sendMsg(chatMsg);
-      e.target.files = null;
+      this.sendMsg(chatGPT);
+      const res = await diagnosis(DPicdata)
+      this.diaresult = res.msg
+      this.loading = false;
+      this.chatList[this.chatList.length - 1].msg = this.diaresult;
+      this.isSend = false;
     },
     //发送文件
-    sendFile(e) {
-      let chatMsg = {
-        headImg: require("@/assets/img/head_portrait.jpg"),
-        name: "大毛是小白",
-        time: "09：12 AM",
-        msg: "",
-        chatType: 2, //信息类型，0文字，1图片, 2文件
-        extend: {
-          fileType: "", //(1word，2excel，3ppt，4pdf，5zpi, 6txt)
-        },
-        uid: "1001",
-      };
-      let files = e.target.files[0]; //图片文件名
-      chatMsg.msg = files;
-      console.log(files);
-      if (files) {
-        switch (files.type) {
-          case "application/msword":
-          case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-            chatMsg.extend.fileType = 1;
-            break;
-          case "application/vnd.ms-excel":
-          case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-            chatMsg.extend.fileType = 2;
-            break;
-          case "application/vnd.ms-powerpoint":
-          case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-            chatMsg.extend.fileType = 3;
-            break;
-          case "application/pdf":
-            chatMsg.extend.fileType = 4;
-            break;
-          case "application/zip":
-          case "application/x-zip-compressed":
-            chatMsg.extend.fileType = 5;
-            break;
-          case "text/plain":
-            chatMsg.extend.fileType = 6;
-            break;
-          default:
-            chatMsg.extend.fileType = 0;
-        }
-        this.sendMsg(chatMsg);
-        e.target.files = null;
-      }
+    sendFile() {
+      this.$message("该功能还没有开发哦，敬请期待一下吧~🥳");
     },
     // 发送语音
     telephone() {
@@ -430,7 +406,7 @@ export default {
               background-color: rgb(39, 42, 55);
             }
 
-            pre{
+            pre {
               white-space: break-spaces;
             }
           }

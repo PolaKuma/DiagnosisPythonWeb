@@ -29,15 +29,15 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/',
+    path: '/helloworld',
     name: 'HelloWorld',
-    redirect: '/helloworld',
     component: () => import('@/views/hello/index'),
-    meta: { title: 'Index', icon: 'el-icon-s-order' }
+    meta: {title: 'Index', icon: 'el-icon-s-order'},
   },
   {
-    path: '/dashboard',
+    path: '/',
     component: Layout,
+    redirect: '/dashboard',
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
@@ -81,7 +81,6 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

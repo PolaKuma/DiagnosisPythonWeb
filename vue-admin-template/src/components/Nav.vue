@@ -54,8 +54,9 @@ export default {
           this.$message('该功能还没有开发哦，敬请期待一下吧~🥳')
           break
         case 3:
-          this.$message('该功能还没有开发哦，敬请期待一下吧~🥳')
-          break
+          this.$router.push({
+            name: 'read'
+          })
         default:
           this.$router.push({
             name: 'HelloWorld'

@@ -7,11 +7,11 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="ava.jpeg" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
+          <router-link to="/helloworld">
             <el-dropdown-item>
               Home
             </el-dropdown-item>
@@ -25,7 +25,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-dialog title="修改密码" width="30%" :visible.sync="dialogFormVisible">
+    <el-dialog title="修改密码" width="50%" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <a> {{ name }}</a>

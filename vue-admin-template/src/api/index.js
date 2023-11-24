@@ -1,7 +1,7 @@
 import * as user from './user/user'
-import * as book from './user/book'
+import * as patient from './user/patient'
 
 export default {
   user,
-  book
+  patient
 }

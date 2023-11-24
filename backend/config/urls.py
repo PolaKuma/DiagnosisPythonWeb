@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from main import views as v2
-from booksManage import views as v1
+from patientsManage import views as v1
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,10 +29,10 @@ urlpatterns = [
     path('api/user', v2.UserManage().handle),
 
     # 图书的增删改查、模糊查询
-    path('api/books',v1.BooksManage().handle),
+    path('api/patients',v1.PatientsManage().handle),
 
-    path('api/read',v1.ReadManage().handle),
+    path('api/diagnosis',v1.DiagnosisManage().handle),
 
     # 书籍的批量添加
-    path('api/upload',v1.BooksManage().upload)
+    path('api/upload',v1.PatientsManage().upload)
 ]

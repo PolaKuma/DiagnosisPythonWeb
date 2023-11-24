@@ -19,26 +19,23 @@ class User(AbstractUser):
     id = models.BigAutoField(primary_key=True)
 
     # 用户类型
-    # 1： 老师  | 2：学生
+    # 1： 主任  | 2：医师
     usertype = models.PositiveIntegerField()
 
     # 真实姓名
     realname = models.CharField(max_length=30, db_index=True)
 
-    # 学号
-    studentno = models.CharField(
+    # 工号
+    doctorno = models.CharField(
         max_length=10,
         db_index=True,
         null=True, blank=True
     )
 
-    # 备注描述
-    desc = models.CharField(max_length=500, null=True, blank=True)
-
-    REQUIRED_FIELDS = [usertype, 'realname']
+    REQUIRED_FIELDS = ['doctorno','usertype', 'realname']
 
     class Meta:
-        db_table = "book_user"
+        db_table = "doctor_user"
 
     # 添加人员信息
     @staticmethod
@@ -52,7 +49,7 @@ class User(AbstractUser):
         if User.objects.filter(username=data['username']).exists():
             return {'code': 500, 'msg': f"用户名{data['username']}已存在"}
         try:
-            # 判断是否为空  如果为空的话就直接赋值2 默认他是一个学生   （1是老师，2是学生）
+            # 判断是否为空  如果为空的话就直接赋值2
             if data['usertype'] == "":
                 data['usertype'] = 2
             # 将data中的信息解析出来然后去create新建
@@ -61,8 +58,7 @@ class User(AbstractUser):
                 password=make_password(data['password']),
                 usertype=data['usertype'],
                 realname=data['realname'],
-                desc=data['desc'],
-                studentno=data['studentno'],
+                doctorno=data['doctorno'],
             )
             return {'code': 200, 'msg': user.id}
         except:

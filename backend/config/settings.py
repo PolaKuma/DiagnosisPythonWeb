@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'main',
-    'booksManage'
+    'patientsManage'
 ]
 
 MIDDLEWARE = [
@@ -78,6 +78,7 @@ AUTH_USER_MODEL = 'main.User'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  #默认设置为5M
 
 DATABASES = {
     'default': {
@@ -90,6 +91,8 @@ DATABASES = {
     }
 }
 
+MEDIA_ROOT = '/Users/junjie/Documents/GitHub/DiagnosisPythonWeb/backend/media/'
+MEDIA_URL = '/media/'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

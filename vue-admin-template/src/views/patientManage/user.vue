@@ -3,23 +3,21 @@
     <el-button type="primary" @click="AddForm">增加人员</el-button>
     <el-table :data="tableData" v-loading="loading" style="width: 100%">
       <el-table-column type="index" label="序号" align="center" width="70"/>
-      <el-table-column prop="studentno" label="病例号" align="center" width="180"/>
+      <el-table-column prop="doctorno" label="工号" align="center" width="180"/>
       <el-table-column prop="username" label="登录名" align="center" width="180"/>
       <el-table-column prop="realname" label="姓名" align="center" width="180"/>
-      <el-table-column prop="usertype" label="类型" align="center" width="180">
+      <el-table-column prop="usertype" label="职称" align="center" width="180">
         <template v-slot="{row}">
-          <el-tag :type="row.usertype === 1 ? '' : 'danger' " effect="dark">
-            {{ row.usertype === 1 ? "阴性" : "阳性" }}
+          <el-tag :type="row.usertype === 1 ? '' : 'dark' " effect="danger">
+            {{ row.usertype === 1 ? "主任" : "医师" }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="desc" label="专业" align="center"/>
       <el-table-column prop="date_joined" label="日期" align="center"/>
       <el-table-column label="操作" align="center" width="300">
         <template v-slot="{row}">
           <el-button type="primary" @click="showForm(row)" size='mini'>编辑</el-button>
           <el-button type="danger" @click="deleted(row)" size='mini'>删除</el-button>
-          <el-button type="info" @click="showInfo(row)" size='mini'>显示</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -38,8 +36,8 @@
 
     <el-dialog :title="form.id ? '修改用户':'新增用户'" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item label="病例号" :label-width="formLabelWidth">
-          <el-input v-model="form.studentno" autocomplete="off" style="width: 300px;"></el-input>
+        <el-form-item label="工号" :label-width="formLabelWidth">
+          <el-input v-model="form.doctorno" autocomplete="off" style="width: 300px;"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input v-model="form.realname" autocomplete="off" style="width: 300px;"></el-input>
@@ -51,19 +49,10 @@
           <el-input v-model="password" type="password" placeholder="默认密码：123456" autocomplete="off"
                     style="width: 300px;"></el-input>
         </el-form-item>
-        <el-form-item label="诊断结果" :label-width="formLabelWidth">
+        <el-form-item label="权限" :label-width="formLabelWidth">
           <el-select v-model="form.usertype" placeholder="请选择权限">
-            <el-option label="阴性" value="1"></el-option>
-            <el-option label="阳性" value="2"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="类型" :label-width="formLabelWidth">
-          <el-select v-model="form.desc" placeholder="请选择性别">
-            <el-option label="网络工程" value="网络工程"></el-option>
-            <el-option label="软件工程" value="软件工程"></el-option>
-            <el-option label="计算机科学与技术" value="计算机科学与技术"></el-option>
-            <el-option label="土木工程" value="土木工程"></el-option>
-            <el-option label="应用化学" value="应用化学"></el-option>
+            <el-option label="主任" value="1"></el-option>
+            <el-option label="医师" value="2"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -72,24 +61,12 @@
         <el-button type="primary" @click="onForm">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- Information dialog -->
-    <el-dialog :title="'用户信息'" :visible.sync="infoDialogVisible">
-      <!-- Display information without input fields -->
-      <el-table :data="[form]">
-        <el-table-column label="病例号" prop="studentno"></el-table-column>
-        <el-table-column label="登录名" prop="username"></el-table-column>
-        <el-table-column label="姓名" prop="realname"></el-table-column>
-      </el-table>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="infoDialogVisible = false">关闭</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
-  name: "patient",
+  name: 'user',
   data() {
     return {
       tableData: [],
@@ -99,16 +76,14 @@ export default {
         username: '',
         usertype: '',
         realname: '',
-        desc: '',
-        studentno: ''
+        doctorno: ''
       },
       password: '',
       formLabelWidth: '120px',
       pageSize: 5,
       pageNum: 1,
       total: 0,
-      loading: false,
-
+      loading: false
     }
   },
   mounted() {
@@ -133,13 +108,11 @@ export default {
         username: row.username,
         usertype: row.usertype.toString(),
         realname: row.realname,
-        desc: row.desc,
-        studentno: row.studentno,
+        doctorno: row.doctorno
       }
       this.password = ''
     },
     async onForm() {
-
       const res = await this.$API.user.reqSaveAndUpdateUser(this.form, this.password)
 
       if (res.code === 200) {
@@ -193,14 +166,6 @@ export default {
         realname: '',
         desc: '',
         studentno: ''
-      }
-    },
-    showInfo(row) {
-      this.infoDialogVisible = true
-      this.form = {
-        username: row.username,
-        realname: row.realname,
-        studentno: row.studentno
       }
     }
   }

@@ -3,55 +3,32 @@
     <div>
       <div style="text-align: center">
         <el-select v-model="key" style="width: 100px" placeholder="请选择">
-          <el-option label="书名" value="bookname"></el-option>
-          <el-option label="作者" value="author"></el-option>
-          <el-option label="分类" value="type"></el-option>
-          <el-option label="ISBN" value="isbn"></el-option>
+          <el-option label="患者名字" value="patientName"/>
+          <el-option label="诊治医师" value="doctor"/>
+          <el-option label="性别" value="patientSex"/>
+          <el-option label="年龄" value="patientAge"/>
         </el-select>
-        <el-input v-model="value" autocomplete="off" style="width: 500px; margin: 20px"></el-input>
+        <el-input v-model="value" autocomplete="off" style="width: 500px; margin: 20px"/>
         <el-button type="primary" @click="onState">搜素</el-button>
       </div>
-      <el-button type="primary" @click="showForm">添加书籍</el-button>
-      <el-button type="primary" v-show="usertype===1" @click="uploadDialogFormVisible = true">Excel 批量添加</el-button>
-      <!--        <el-button type="primary" icon="el-icon-plus">添加</el-button>-->
-
-      <el-dialog :title="form.id ? '修改图书':'新增图书'" width="19.4%" :visible.sync="uploadDialogFormVisible">
-        <el-upload
-          class="upload-demo"
-          drag
-          :on-success="handleAvatarSuccess"
-          action="http://localhost/dev-api/api/upload"
-          multiple>
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传xlx\xlxs文件</div>
-        </el-upload>
-        <el-link type="success"
-                 href="http://rcq7r03jb.hb-bkt.clouddn.com/python/%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%9B%BE%E4%B9%A6-%E6%A8%A1%E6%9D%BF.xlsx">
-          下载Excel模板
-        </el-link>
-      </el-dialog>
+      <el-button type="primary" @click="showForm">添加患者</el-button>
 
     </div>
-    <el-table :data="tableData" v-loading="loading" style="width: 100%">
+    <el-table v-loading="loading" :data="tableData" style="width: 100%">
       <el-table-column type="index" label="序号" align="center" width="70"/>
-      <el-table-column label="封面" width="100" align="center">
-        <template v-slot="row">
-          <img style="width: 100px;text-align: center" src="https://book.zhishikoo.com/wp-content/uploads/2022/04/10003661.jpg" alt="">
-        </template>
-      </el-table-column>
       <el-table-column prop="id" label="病例号" align="center" width="300"/>
       <el-table-column prop="patientName" label="名字" align="center" width="300"/>
-      <el-table-column prop="doctor" label="主治医师" align="center"/>
-      <el-table-column prop="type" label="分类" align="center" width="180"/>
       <el-table-column prop="patientAge" label="年龄" align="center" width="180"/>
       <el-table-column prop="patientSex" label="性别" align="center" width="180"/>
+      <el-table-column prop="date" label="生日" align="center" width="180"/>
+      <el-table-column prop="doctor" label="主治医师" align="center"/>
       <el-table-column prop="report" label="报告" align="center" width="180"/>
-      <el-table-column label="操作" align="center" width="270">
+      <el-table-column label="操作" align="center" width="300">
         <template v-slot="{row}">
-          <el-button type="success" @click="readBook(row)" size='mini'>借阅</el-button>
-          <el-button type="primary" @click="showForm(row)" v-show="usertype===1" size='mini'>编辑</el-button>
-          <el-button type="danger" @click="deleted(row)" v-show="usertype===1" size='mini'>删除</el-button>
+          <el-button type="success" size="mini" @click="diagnosisPatient(row)">诊断</el-button>
+          <el-button type="primary" size="mini" @click="showForm(row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="deleted(row)">删除</el-button>
+          <el-button type="info" size="mini" @click="showAttributesDialog(row)">显示</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -64,37 +41,66 @@
       :pager-count="5"
       :page-sizes="[5,15,30]"
       layout="prev,pager,next,jumper,->,sizes,total"
-      @current-change="getBookList"
+      @current-change="getPatientList"
       @size-change="handleSizeChange"
     />
 
-    <el-dialog :title="form.id ? '修改图书':'新增图书'" :visible.sync="dialogFormVisible">
+    <el-dialog :title="form.id ? '修改患者信息':'新增患者信息'" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item label="病例号" :label-width="formLabelWidth">
-          <el-input v-model="form.caseid" autocomplete="off" style="width: 300px;"></el-input>
+        <el-form-item v-if="!form.id" label="病例号" :label-width="formLabelWidth">
+          <el-input v-model="form.caseid" autocomplete="off" style="width: 300px;"/>
         </el-form-item>
         <el-form-item label="名字" :label-width="formLabelWidth">
-          <el-input v-model="form.patientName" autocomplete="off" style="width: 300px;"></el-input>
-        </el-form-item>
-        <el-form-item label="主治医师" :label-width="formLabelWidth">
-          <el-input v-model="form.doctor" autocomplete="off" style="width: 300px;"></el-input>
-        </el-form-item>
-        <el-form-item label="分类" :label-width="formLabelWidth">
-          <el-input v-model="form.type" autocomplete="off" style="width: 300px;"></el-input>
-        </el-form-item>
-        <el-form-item label="体重" :label-width="formLabelWidth">
-          <el-input v-model="form.patientWeight" autocomplete="off" style="width: 300px;"></el-input>
+          <el-input v-model="form.patientName" autocomplete="off" style="width: 300px;"/>
         </el-form-item>
         <el-form-item label="年龄" :label-width="formLabelWidth">
-          <el-date-picker v-model="form.patientAge" value-format="yyyy年MM月" format="" type="month" placeholder="选择日期"/>
+          <el-input v-model="form.patientAge" autocomplete="off" style="width: 300px;"/>
+        </el-form-item>
+        <el-form-item label="性别" :label-width="formLabelWidth">
+          <el-input v-model="form.patientSex" autocomplete="off" style="width: 300px;"/>
+        </el-form-item>
+        <el-form-item label="体重" :label-width="formLabelWidth">
+          <el-input v-model="form.patientWeight" autocomplete="off" style="width: 300px;"/>
+        </el-form-item>
+        <el-form-item label="生日" :label-width="formLabelWidth">
+          <el-date-picker v-model="form.date" value-format="yyyy年MM月" format="" type="month" placeholder="选择日期"/>
+        </el-form-item>
+        <el-form-item label="主治医师" :label-width="formLabelWidth">
+          <el-input v-model="form.doctor" autocomplete="off" style="width: 300px;"/>
         </el-form-item>
         <el-form-item label="报告" :label-width="formLabelWidth">
-          <el-input v-model="form.report" autocomplete="off" style="width: 300px;"></el-input>
+          <el-input v-model="form.report" autocomplete="off" style="width: 300px;"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="onForm">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="'患者信息'" :visible.sync="showAttributesDialogVisible">
+      <el-table :data="[form]">
+        <el-table-column prop="id" label="病例号"></el-table-column>
+        <el-table-column prop="patientName" label="名字"></el-table-column>
+        <el-table-column prop="patientAge" label="年龄"></el-table-column>
+        <el-table-column prop="patientSex" label="性别"></el-table-column>
+        <el-table-column prop="patientWeight" label="体重"></el-table-column>
+        <el-table-column prop="date" label="生日"></el-table-column>
+        <el-table-column prop="doctor" label="主治医师"></el-table-column>
+      </el-table>
+      <el-table :data="[form]">
+        <el-table-column prop="report" label="报告"></el-table-column>
+      </el-table>
+      <el-table :data="[form]">
+        <el-table-column label="图片">
+          <template slot-scope="scope">
+            <img :src="scope.row.patientPic" alt="病例图片" style="max-width: 400px; max-height: 400px;">
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showAttributesDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
   </div>
@@ -103,10 +109,11 @@
 
 <script>
 
-import { mapGetters } from 'vuex';
+import {mapGetters} from 'vuex'
+import {diagnosisPatient} from "@/api/user/patient";
 
 export default {
-  name: 'book',
+  name: 'Patient',
   computed: {
     ...mapGetters([
       'usertype'
@@ -115,6 +122,7 @@ export default {
   data() {
     return {
       tableData: [],
+      showAttributesDialogVisible: false,
       dialogFormVisible: false,
       form: {
         doctor: '',
@@ -123,43 +131,46 @@ export default {
         patientName: '',
         patientSex: '',
         patientWeight: '',
-        report: '',
-        type: ''
+        report: 'none',
+        date: '',
+        patientPic: ''
       },
       formLabelWidth: '120px',
       pageSize: 5,
       pageNum: 1,
       total: 0,
-      key: 'bookname',
+      key: 'patientName',
       value: '',
       loading: false,
-      uploadDialogFormVisible: false,
-      downloadExcel: ''
     }
   },
   mounted() {
-    this.getBookList()
+    this.getPatientList(1)
   },
   methods: {
-    async getBookList(pager = 1) {
+    async getPatientList(pager = 1) {
       this.loading = true
       this.pageNum = pager
-      const { pageNum, pageSize } = this // 发送请求时候需要带参数
-      const res = await this.$API.book.reqBooks(pageNum, pageSize, this.key, this.value)
+      const {pageNum, pageSize} = this // 发送请求时候需要带参数
+      const res = await this.$API.patient.reqPatients(pageNum, pageSize, this.key, this.value)
       if (res.code === 200) {
         this.tableData = res.msg
         this.total = res.total
         this.loading = false
-        console.log('Response Message:', res.msg);
+        console.log('Response Message:', res.msg)
       }
     },
     showForm(row) {
       this.dialogFormVisible = true
-      this.form = { ...row }
+      this.form = {...row}
+    },
+    showAttributesDialog(row) {
+      this.showAttributesDialogVisible = true
+      this.form = {...row}
     },
     async onForm() {
-      console.log(this.form);
-      const res = await this.$API.book.reqSaveAndUpdateBooks(this.form)
+      console.log(this.form)
+      const res = await this.$API.patient.reqSaveAndUpdatePatients(this.form)
       if (res.code === 200) {
         // 关闭表单
         this.dialogFormVisible = false
@@ -167,23 +178,23 @@ export default {
         this.$message({
           message: '修改成功!',
           type: 'success'
-        });
-        await this.getBookList()
+        })
+        await this.getPatientList(1)
       }
     },
     deleted(row) {
-      this.$confirm(`你确定删除 《${row.bookname}》 吗?`, '删除', {
+      this.$confirm(`你确定删除 ${row.patientName} 吗?`, '删除', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        const result = await this.$API.book.delBooks(row.id)
+        const result = await this.$API.patient.delPatients(row.id)
         if (result.code === 200) {
           this.$notify({
               type: 'success',
               message: '删除成功!'
             },
-            await this.getBookList()
+            await this.getPatientList(1)
           )
         } else {
           this.$notify({
@@ -199,28 +210,28 @@ export default {
       })
     },
     onState() {
-      this.getBookList()
+      this.getPatientList(1)
     },
     handleSizeChange(limit) {
       this.pageSize = limit
       this.getUserList()
     },
-    async readBook(row) {
+    async diagnosisPatient(row) {
       const data = {
-        'bookid': row.id,
-        'bookname': row.bookname
+        'patientid': row.id,
+        'patientName': row.patientName
       }
-      this.$confirm(`你确定借阅 《${row.bookname}》 吗?`, '删除', {
+      this.$confirm(`你确定诊断 ${row.patientName} 吗?`, '删除', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async() => {
-        const result = await this.$API.book.readBook(data)
+      }).then(async () => {
+        const result = await this.$API.patient.diagnosisPatient(data)
         if (result.code === 200) {
           this.$notify({
-            type: 'success',
-            message: '《' + row.bookname + '》 借阅成功！请到借阅管理中查看'
-            },
+              type: 'success',
+              message: '' + row.patientName + ' 待诊断！请到诊断记录中查看'
+            }
           )
         }
       }).catch(() => {
@@ -230,18 +241,20 @@ export default {
         })
       })
     },
-    handleAvatarSuccess(response, file, fileList) {
-      this.$notify({
-          type: 'success',
-          message: '批量添加成功!'
-        },
-        this.getBookList(1)
-      )
-    }
   }
 }
 </script>
 
 <style scoped>
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-item {
+  flex: 0 0 33.33%;
+  box-sizing: border-box;
+  padding: 5px; /* 调整列之间的间距 */
+}
 
 </style>
