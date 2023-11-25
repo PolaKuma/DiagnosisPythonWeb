@@ -5,6 +5,20 @@
       <div class="title-container">
         <h3 class="title">注册</h3>
       </div>
+      <el-form-item prop="doctorno">
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
+        <el-input
+          ref="doctorno"
+          v-model="loginForm.doctorno"
+          placeholder="Doctorno"
+          name="doctorno"
+          type="text"
+          tabindex="1"
+          auto-complete="on"
+        />
+      </el-form-item>
 
       <el-form-item prop="username">
         <span class="svg-container">
@@ -115,17 +129,13 @@ export default {
     return {
       loginForm: {
         username: '',
-        usertype:'',
-        realname:'',
+        usertype: '',
+        realname: '',
         desc: '',
-        studentno: ''
+        doctorno: '',
+        password: ''
       },
       formLabelWidth: '120px',
-      form:{
-        username: '',
-        password: '',
-        qpassword: ''
-      },
       dialogFormVisible: false,
       password: '',
       loginRules: {
@@ -174,7 +184,7 @@ export default {
       })
     },
     async register(){
-      const res = await this.$API.user.reqSaveAndUpdateUser(this.loginForm,this.password)
+      const res = await this.$API.user.reqSaveAndUpdateUser(this.loginForm, this.password)
       if (res.code === 200){
         this.$message({
           message: '注册成功!',
@@ -190,7 +200,8 @@ export default {
         usertype:'',
         realname:'',
         desc: '',
-        studentno: ''
+        studentno: '',
+        password: ''
       }
       this.password = ''
     }
@@ -202,7 +213,7 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
+$bg:rgb(227,228,229);
 $light_gray:#fff;
 $cursor: grey;
 

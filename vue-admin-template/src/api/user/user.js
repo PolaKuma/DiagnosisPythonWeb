@@ -5,9 +5,9 @@ export const reqUser = (pageNum,pageSize) => request({ url: `api/user` , method:
 export const reqSaveAndUpdateUser = (user,password) => {
 
   if (user.id){
-    return  request({ url: `api/user`, method: 'put' ,data: { "action": "updateOne","newdata": user,"password":password} })
-  }else{
-    return  request({ url: `api/user`, method: 'post' ,data: { "action": "addOne","data": user,"password":password} })
+    return request({ url: `api/user`, method: 'put' ,data: { "action": "updateOne", "newdata": user, "password":password} })
+  } else {
+    return request({ url: `api/user`, method: 'post' ,data: { "action": "addOne", "data": user, "password":password} })
   }
 
 }

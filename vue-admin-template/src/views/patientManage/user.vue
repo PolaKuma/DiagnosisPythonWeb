@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" @click="AddForm">增加人员</el-button>
+    <el-button type="primary" v-if="usertype===1" @click="AddForm">增加人员</el-button>
     <el-table :data="tableData" v-loading="loading" style="width: 100%">
       <el-table-column type="index" label="序号" align="center" width="70"/>
       <el-table-column prop="doctorno" label="工号" align="center" width="180"/>
@@ -8,7 +8,7 @@
       <el-table-column prop="realname" label="姓名" align="center" width="180"/>
       <el-table-column prop="usertype" label="职称" align="center" width="180">
         <template v-slot="{row}">
-          <el-tag :type="row.usertype === 1 ? '' : 'dark' " effect="danger">
+          <el-tag :type="row.usertype === 1 ? 'dark' : '' " effect="danger">
             {{ row.usertype === 1 ? "主任" : "医师" }}
           </el-tag>
         </template>
@@ -16,8 +16,8 @@
       <el-table-column prop="date_joined" label="日期" align="center"/>
       <el-table-column label="操作" align="center" width="300">
         <template v-slot="{row}">
-          <el-button type="primary" @click="showForm(row)" size='mini'>编辑</el-button>
-          <el-button type="danger" @click="deleted(row)" size='mini'>删除</el-button>
+          <el-button v-if="usertype===1" type="primary" @click="showForm(row)" size="mini">编辑</el-button>
+          <el-button v-if="usertype===1" type="danger" @click="deleted(row)" size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,8 +65,14 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: 'user',
+  computed: {
+    ...mapGetters([
+      'usertype'
+    ])
+  },
   data() {
     return {
       tableData: [],

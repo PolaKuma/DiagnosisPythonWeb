@@ -40,7 +40,7 @@ class User(AbstractUser):
     # 添加人员信息
     @staticmethod
     def addOne(data):
-
+        print(data)
         # 如果data中的username 和 password 为空的话就返回500 报错
         if data['username'] == '' and data['password'] == '':
             return {'code': 500, 'msg': '请输入用户名和密码'}
@@ -57,7 +57,7 @@ class User(AbstractUser):
                 username=data['username'],
                 password=make_password(data['password']),
                 usertype=data['usertype'],
-                realname=data['realname'],
+                realname=data['username'],
                 doctorno=data['doctorno'],
             )
             return {'code': 200, 'msg': user.id}
