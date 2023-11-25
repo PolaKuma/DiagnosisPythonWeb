@@ -41,7 +41,7 @@ class Patient(models.Model):
     date = models.CharField(max_length=30)
 
     # 报告
-    report = models.CharField(max_length=255, null=False)
+    report = models.TextField(null=True)
 
     # 诊断图像
     patientPic = models.TextField(null=True)
@@ -310,7 +310,7 @@ class diagnosisPatient(models.Model):
 
         # Load the pre-trained CheXNet model
         base_model = chexnet(input_shape=input_shape,
-                             weights_path='/Users/junjie/Documents/GitHub/DiagnosisPythonWeb/backend/patientsManage/brucechou1983_CheXNet_Keras_0.3.0_weights.h5')
+                             weights_path='/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/brucechou1983_CheXNet_Keras_0.3.0_weights.h5')
 
         # Function to encode a given image into a vector
         def encode(image):
@@ -321,7 +321,7 @@ class diagnosisPatient(models.Model):
 
         encoding = {}
         print(picName)
-        img_path = '/Users/junjie/Documents/GitHub/DiagnosisPythonWeb/backend/media/' + picName
+        img_path = '/Users/junjie/Documents/GitHub/Untitled/backend/media/' + picName
         file_name = os.path.basename(img_path)
         img = load_img(img_path, target_size=input_shape[:2])
         x = img_to_array(img)
@@ -329,17 +329,17 @@ class diagnosisPatient(models.Model):
         encoding[file_name] = encode(x)
 
         # Save the encoding vectors as a pickle file
-        with open("/Users/junjie/Documents/GitHub/DiagnosisPythonWeb/backend/patientsManage/encodings.pkl", "wb") as f:
+        with open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/encodings.pkl", "wb") as f:
             pickle.dump(encoding, f)
 
         features = pickle.load(
-            open("/Users/junjie/Documents/GitHub/DiagnosisPythonWeb/backend/patientsManage/encodings.pkl", "rb"))
-        model = load_model('/Users/junjie/Documents/GitHub/DiagnosisPythonWeb/backend/patientsManage/model_3.h5')
+            open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/encodings.pkl", "rb"))
+        model = load_model('/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/model_3.h5')
         max_length = 124
         words_to_index = pickle.load(
-            open("/Users/junjie/Documents/GitHub/DiagnosisPythonWeb/backend/patientsManage/words.pkl", "rb"))
+            open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/words.pkl", "rb"))
         index_to_words = pickle.load(
-            open("/Users/junjie/Documents/GitHub/DiagnosisPythonWeb/backend/patientsManage/words1.pkl", "rb"))
+            open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/words1.pkl", "rb"))
 
         def Image_Caption(picture):
             in_text = 'startseq'
