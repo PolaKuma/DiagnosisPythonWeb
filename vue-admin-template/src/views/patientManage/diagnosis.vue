@@ -119,7 +119,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        const result = await this.$API.patient.returnBook(row.diagnosisTime)
+        const result = await this.$API.patient.returnPatient(row.diagnosisTime)
         if (result.code === 200) {
           this.$notify({
               type: 'success',

@@ -20,13 +20,13 @@ class PatientsManage:
         action = pd.get('action')
 
         if action == 'listPatients':
-            return self.listBooks(request)
+            return self.listPatients(request)
         elif action == 'addPatients':
-            return self.addBooks(request)
+            return self.addPatients(request)
         elif action == 'updatePatients':
-            return self.updateBooks(request)
+            return self.updatePatients(request)
         elif action == 'deletePatients':
-            return self.deleteBooks(request)
+            return self.deletePatients(request)
         elif action == 'addPic':
             return self.updatePic(request)
         else:
@@ -41,8 +41,8 @@ class PatientsManage:
         res = Patient.updatePic(uid, newdata)
         return JsonResponse(res)
 
-    # 获取所有的图书信息
-    def listBooks(self, request):
+    # 获取所有的患者信息
+    def listPatients(self, request):
         # 当前第几页
         pagenum = int(request.pd.get('pageNum'))
         # 这一页一共要多少行
@@ -54,16 +54,16 @@ class PatientsManage:
         res = Patient.listPatients(pagenum, pagesize, key, value)
         return JsonResponse(res)
 
-    # 添加图书
-    def addBooks(self, request):
+    # 添加患者
+    def addPatients(self, request):
         # 获取request请求体中的data
         data = request.pd.get('data')
         res = Patient.addPatients(data)
 
         return JsonResponse(res)
 
-    # 修改图书
-    def updateBooks(self, request):
+    # 修改患者
+    def updatePatients(self, request):
         # 解析出newdata
         newdata = request.pd.get('newdata')
         # 解析出id
@@ -72,8 +72,8 @@ class PatientsManage:
         res = Patient.updatePatients(uid, newdata)
         return JsonResponse(res)
 
-    # # 删除图书
-    def deleteBooks(self, request):
+    # 删除患者
+    def deletePatients(self, request):
         data = request.pd.get('id')
         res = Patient.deletePatients(data)
         return JsonResponse(res)
@@ -114,7 +114,7 @@ class PatientsManage:
         return JsonResponse({'code': 200, 'msg': "成功"})
 
 
-# 借阅管理的类
+# 诊断管理的类
 class DiagnosisManage:
     def handle(self, request):
 
@@ -129,10 +129,10 @@ class DiagnosisManage:
 
         if action == 'readlist':
             return self.readlist(request)
-        elif action == 'readbook':
-            return self.readbook(request)
-        elif action == 'returnbook':
-            return self.returnbook(request)
+        elif action == 'readPatient':
+            return self.readPatient(request)
+        elif action == 'returnPatient':
+            return self.returnPatient(request)
         elif action == 'addPic':
             return self.update(request)
         elif action == 'Diagnosis':
@@ -166,7 +166,7 @@ class DiagnosisManage:
         res = diagnosisPatient.updateDPic(uid, newdata)
         return JsonResponse(res)
 
-    # 获取自己所有的借阅信息
+    # 获取自己所有的诊断信息
     def readlist(self, request):
         pagenum = int(request.pd.get('pageNum'))
         pagesize = int(request.pd.get('pageSize'))
@@ -180,8 +180,8 @@ class DiagnosisManage:
             return JsonResponse(res)
         return JsonResponse({'code': 500, 'msg': '会话过期了'})
 
-    #  借阅图书
-    def readbook(self, request):
+    # 诊断病人
+    def readPatient(self, request):
         data = request.pd.get('data')
         token = request.COOKIES.get('vue_admin_template_token')
         if token:
@@ -191,8 +191,8 @@ class DiagnosisManage:
 
         return JsonResponse({'code': 500, 'msg': '会话过期了'})
 
-    # 归还图书
-    def returnbook(self, request):
+    # 完成诊断
+    def returnPatient(self, request):
         id = request.pd.get('data')
         res = diagnosisPatient.returndiagnosis(id)
 

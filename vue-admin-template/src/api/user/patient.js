@@ -27,9 +27,9 @@ export const reqDiagnosis = (pageNum, pageSize) => request({
   data: {'action': 'readlist', 'pageNum': pageNum, 'pageSize': pageSize}
 })
 
-export const diagnosisPatient = (data) => request({url: `api/diagnosis`, method: 'post', data: {'action': 'readbook', 'data': data}})
+export const diagnosisPatient = (data) => request({url: `api/diagnosis`, method: 'post', data: {'action': 'readPatient', 'data': data}})
 
-export const returnBook = (id) => request({url: `api/diagnosis`, method: 'post', data: {'action': 'returnbook', 'data': id}})
+export const returnPatient = (id) => request({url: `api/diagnosis`, method: 'post', data: {'action': 'returnPatient', 'data': id}})
 
 export const addDPic = (Picdata) => {
   request({ url: `api/diagnosis`, method: 'post', data: {"action": "addPic", "data": Picdata }})

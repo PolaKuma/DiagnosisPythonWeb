@@ -28,11 +28,11 @@ urlpatterns = [
     # 用户增删改查
     path('api/user', v2.UserManage().handle),
 
-    # 图书的增删改查、模糊查询
+    # 患者的增删改查、模糊查询
     path('api/patients',v1.PatientsManage().handle),
 
     path('api/diagnosis',v1.DiagnosisManage().handle),
 
-    # 书籍的批量添加
+    # 患者的批量添加（待开发）
     path('api/upload',v1.PatientsManage().upload)
 ]

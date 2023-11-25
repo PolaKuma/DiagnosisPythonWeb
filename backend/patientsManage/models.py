@@ -122,7 +122,7 @@ class Patient(models.Model):
             err = traceback.format_exc()
             return {'code': 500, 'msg': err}
 
-    # 更新book方法
+    # 更新patient方法
     @staticmethod
     def updatePatients(uid, newdata):
         try:
