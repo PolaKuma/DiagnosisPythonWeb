@@ -32,7 +32,7 @@ export const constantRoutes = [
     path: '/helloworld',
     name: 'HelloWorld',
     component: () => import('@/views/hello/index'),
-    meta: {title: 'Index', icon: 'el-icon-s-order'},
+    meta: {title: '首页', icon: 'el-icon-s-home'},
   },
   {
     path: '/',
@@ -42,7 +42,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: {title: 'Dashboard', icon: 'dashboard'}
+      meta: {title: '数据面板', icon: 'dashboard'}
     }]
   },
   {
@@ -59,12 +59,12 @@ export const constantRoutes = [
       path: 'book',
       name: 'book',
       component: () => import('@/views/patientManage/patient.vue'),
-      meta: {title: '病患管理', icon: 'el-icon-goods'}
+      meta: {title: '病患管理', icon: 'el-icon-s-claim'}
     }, {
       path: 'read',
       name: 'read',
       component: () => import('@/views/patientManage/diagnosis.vue'),
-      meta: {title: '检查记录管理', icon: 'el-icon-goods'}
+      meta: {title: '检查记录管理', icon: 'el-icon-s-marketing'}
     }
     ]
   },

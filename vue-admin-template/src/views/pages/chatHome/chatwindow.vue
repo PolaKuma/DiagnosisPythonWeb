@@ -130,9 +130,9 @@ export default {
     getFriendChatMsg() {
       let initalMsg = {
         headImg: require('@/assets/img/head_portrait1.jpg'),
-        name: '凤雏',
+        name: 'Chat-Med',
         time: new Date().toLocaleTimeString(),
-        msg: '你好，小凤为你服务',
+        msg: '您好，很高兴为您服务！',
         chatType: 0,
         uid: '1002'
       };
@@ -160,7 +160,7 @@ export default {
       if (this.inputMsg) {
         let chatMsg = {
           headImg: require("@/assets/img/head_portrait.jpg"),
-          name: "卧龙",
+          name: "Doctor",
           time: new Date().toLocaleTimeString(),
           msg: this.inputMsg,
           chatType: 0, //信息类型，0文字，1图片
@@ -177,7 +177,7 @@ export default {
         this.loading = true;
         let chatGPT = {
           headImg: require("@/assets/img/head_portrait1.jpg"),
-          name: "凤雏",
+          name: "Chat-Med",
           time: new Date().toLocaleTimeString(),
           msg: '分析中...',
           chatType: 0, //信息类型，0文字，1图片
@@ -201,7 +201,7 @@ export default {
       let _this = this;
       let chatMsg = {
         headImg: require("@/assets/img/head_portrait.jpg"),
-        name: "大毛是小白",
+        name: "Doctor",
         time: new Date().toLocaleTimeString(),
         msg: "",
         chatType: 1, //信息类型，0文字，1图片, 2文件
@@ -242,7 +242,7 @@ export default {
       this.loading = true;
       let chatGPT = {
         headImg: require("@/assets/img/head_portrait1.jpg"),
-        name: "凤雏",
+        name: "Chat-Med",
         time: new Date().toLocaleTimeString(),
         msg: '分析中...',
         chatType: 0, //信息类型，0文字，1图片

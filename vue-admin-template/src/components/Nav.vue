@@ -44,7 +44,7 @@ export default {
       switch (index) {
         case 0:
           this.$router.push({
-            name: 'ChatHome'
+            name: 'chatHome'
           }, () => {})
           break;
         case 1:
@@ -57,6 +57,7 @@ export default {
           this.$router.push({
             name: 'read'
           })
+          break
         default:
           this.$router.push({
             name: 'HelloWorld'

@@ -2,7 +2,7 @@
   <div>
     <div>
       <div style="text-align: center">
-        <el-select v-model="key" style="width: 100px" placeholder="请选择">
+        <el-select v-model="key" style="width: 120px" placeholder="请选择">
           <el-option label="患者名字" value="patientName"/>
           <el-option label="诊治医师" value="doctor"/>
           <el-option label="性别" value="patientSex"/>

@@ -7,7 +7,7 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
-    usertype: ''
+    usertype: '',
   }
 }
 
@@ -52,7 +52,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { msg } = response
-        const { username,usertype } = msg[0]
+        const { username, usertype } = msg[0]
         commit('SET_NAME', username)
         commit('SET_USERTYPE', usertype)
         commit('SET_AVATAR', "http://rcq7r03jb.hb-bkt.clouddn.com/fd8add42-eec6-4451-99f6-677c28887a93-201512720292758506.gif")

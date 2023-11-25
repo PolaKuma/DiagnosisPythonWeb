@@ -62,7 +62,7 @@ export default {
     this.personList = [
       {
         img: '',
-        name: '凤雏',
+        name: 'Chat-Med',
         detail: 'Welcome Chat',
         lastMsg: 'to do',
         id: '1002',
