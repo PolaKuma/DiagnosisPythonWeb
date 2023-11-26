@@ -93,6 +93,7 @@ import HeadPortrait from '@/components/HeadPortrait.vue'
 import Emoji from '@/components/Emoji.vue'
 import FileCard from '@/components/FileCard.vue'
 import {addDPic, addPic, chat, diagnosis} from '@/api/user/patient'
+import {mapGetters} from 'vuex'
 
 export default {
   components: {
@@ -232,9 +233,20 @@ export default {
         chatMsg.msg = this.result // 赋值
         Picdata['Pic'] = this.result
         DPicdata['Pic'] = this.result
-        _this.srcImgList.push(chatMsg.msg);
-        await addPic(Picdata)
+        _this.srcImgList.push(chatMsg.msg)
+        const res = await addPic(Picdata)
         await addDPic(DPicdata)
+        if (res.code === 200) {
+          this.$notify({
+            type: 'success',
+            message: '已为您保存图像！'
+          })
+        } else{
+          this.$notify({
+            type: 'warning',
+            message: '保存失败,请联系系统运维!'
+          })
+        }
       }
       this.sendMsg(chatMsg)
       e.target.files = null

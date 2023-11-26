@@ -100,6 +100,7 @@
       </el-table>
 
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="saveReport(form)">导出报告</el-button>
         <el-button @click="showAttributesDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
@@ -110,7 +111,6 @@
 <script>
 
 import {mapGetters} from 'vuex'
-import {diagnosisPatient} from "@/api/user/patient";
 
 export default {
   name: 'Patient',
@@ -141,7 +141,7 @@ export default {
       total: 0,
       key: 'patientName',
       value: '',
-      loading: false,
+      loading: false
     }
   },
   mounted() {
@@ -160,6 +160,15 @@ export default {
         console.log('Response Message:', res.msg)
       }
     },
+    async saveReport(form) {
+      const res = await this.$API.patient.saveReport(form)
+      if (res.code === 200) {
+        this.$message({
+          message: '导出成功!',
+          type: 'success'
+        })
+      }
+    },
     showForm(row) {
       this.dialogFormVisible = true
       this.form = {...row}
@@ -169,7 +178,6 @@ export default {
       this.form = {...row}
     },
     async onForm() {
-      console.log(this.form)
       const res = await this.$API.patient.reqSaveAndUpdatePatients(this.form)
       if (res.code === 200) {
         // 关闭表单
@@ -212,6 +220,7 @@ export default {
     onState() {
       this.getPatientList(1)
     },
+
     handleSizeChange(limit) {
       this.pageSize = limit
       this.getUserList()

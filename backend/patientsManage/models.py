@@ -3,12 +3,15 @@ import json
 import os
 import pickle
 import traceback
-
+import base64
+import io
+from docx.shared import Mm
 import numpy as np
 import requests
 from django.core.paginator import Paginator, EmptyPage
 from django.db import models
 from django.db.models import Q
+from docxtpl import DocxTemplate, InlineImage
 from keras.applications.densenet import DenseNet121
 from keras.applications.densenet import preprocess_input
 from keras.layers import Dropout
@@ -155,6 +158,35 @@ class Patient(models.Model):
             err = traceback.format_exc()
             return {'code': 500, 'msg': err}
 
+    @staticmethod
+    def saveReport(caseid):
+        try:
+            patient = Patient.objects.get(id=caseid)
+            print(caseid)
+            template = DocxTemplate("/Users/junjie/Documents/GitHub/Untitled/backend/report/report template.docx")
+            data = {
+                'patientid': patient.id,
+                'name': patient.patientName,
+                'age': patient.patientAge,
+                'sex': patient.patientSex,
+                'date': patient.date,
+                'doctor': patient.doctor,
+                'report': patient.report,
+            }
+            pic_base64 = patient.patientPic
+            encoded_data = pic_base64.split(",")[1]
+            img_bytes = base64.b64decode(encoded_data)
+            image = io.BytesIO(img_bytes)
+            data['pic'] = InlineImage(template, image, height=Mm(80))
+            template.render(data)
+            template.save("/Users/junjie/Documents/GitHub/Untitled/backend/report/" + str(patient.id) + ".docx")
+            return {'code': 200, 'msg': "导出成功"}
+        except Patient.DoesNotExist:
+            return {'code': 500, 'msg': f'id为 {caseid} 的患者不存在'}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
 
 # 诊断的类
 class diagnosisPatient(models.Model):
@@ -286,7 +318,7 @@ class diagnosisPatient(models.Model):
 
         response = requests.request("POST", url, headers=headers, data=payload)
         data = json.loads(response.text)
-        return {'code': 200, 'msg':data['result']}
+        return {'code': 200, 'msg': data['result']}
 
     @staticmethod
     def Diagnosis(diagnosisTime, picName):

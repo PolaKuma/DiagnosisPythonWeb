@@ -15,7 +15,7 @@ export const reqSaveAndUpdatePatients = (patient) => {
   }
 }
 export const addPic = (Picdata) => {
-  request({url: `api/patients`, method: 'post', data: {"action": "addPic", "data": Picdata}})
+  return request({url: `api/patients`, method: 'post', data: {"action": "addPic", "data": Picdata}})
 }
 export const delPatients = (id) => request({url: `api/patients`, method: 'delete', data: {"action": "deletePatients", "id": id}})
 
@@ -32,7 +32,7 @@ export const diagnosisPatient = (data) => request({url: `api/diagnosis`, method:
 export const returnPatient = (id) => request({url: `api/diagnosis`, method: 'post', data: {'action': 'returnPatient', 'data': id}})
 
 export const addDPic = (Picdata) => {
-  request({ url: `api/diagnosis`, method: 'post', data: {"action": "addPic", "data": Picdata }})
+  return request({ url: `api/diagnosis`, method: 'post', data: {"action": "addPic", "data": Picdata }})
 }
 
 export const diagnosis = (Picdata) => {
@@ -41,4 +41,8 @@ export const diagnosis = (Picdata) => {
 
 export const chat = (commit) => {
   return request({ url: `api/diagnosis`, method: 'post', data: {"action": "chat", "data": commit }})
+}
+
+export const saveReport = (caseid) => {
+  return request({ url: `api/patients`, method: 'post', data: {"action": "saveReport", "data": caseid }})
 }

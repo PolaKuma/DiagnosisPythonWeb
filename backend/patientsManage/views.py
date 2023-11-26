@@ -29,8 +29,16 @@ class PatientsManage:
             return self.deletePatients(request)
         elif action == 'addPic':
             return self.updatePic(request)
+        elif action == 'saveReport':
+            return self.saveReport(request)
         else:
             return JsonResponse({'code': 500, 'msg': 'action参数错误'})
+
+    def saveReport(self, request):
+        newdata = request.pd.get('data')
+        newdata = newdata['id']
+        res = Patient.saveReport(newdata)
+        return JsonResponse(res)
 
     def updatePic(self, request):
         # 解析出newdata
