@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <div class="nav-item">
-        <img src="./logo.png">
+        <img src="@/image/logo.png">
       </div>
       <div class="robot">
         <div id="chatbot">
@@ -58,7 +58,7 @@
       <div class="button-container">
         <div class="button">
           <router-link to='/dashboard'>
-            <img src="./doctor.png" alt="Icon 1">
+            <img src="@/image/doctor.png" alt="Icon 1">
             <div class="button-text">
               <div class="title">患者管理系统</div>
               <div class="description"></div>
@@ -67,7 +67,7 @@
         </div>
         <div class="button">
           <router-link to='/chatHome'>
-            <img src="./diagnose.png" alt="Icon 2">
+            <img src="@/image/diagnose.png" alt="Icon 2">
             <div class="button-text">
               <div class="title">智能辅助诊断</div>
               <div class="description"></div>
@@ -75,13 +75,13 @@
           </router-link>
         </div>
         <div class="button">
-          <a href="#">
-            <img src="./news.png" alt="Icon 3">
+          <router-link to="/newsindex">
+            <img src="@/image/news.png" alt="Icon 3">
             <div class="button-text">
               <div class="title">医院新闻公告</div>
               <div class="description"></div>
             </div>
-          </a>
+          </router-link>
         </div>
       </div>
     </div>

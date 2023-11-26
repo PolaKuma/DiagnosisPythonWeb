@@ -32,7 +32,17 @@ export const constantRoutes = [
     path: '/helloworld',
     name: 'HelloWorld',
     component: () => import('@/views/hello/index'),
-    meta: {title: '首页', icon: 'el-icon-s-home'},
+    meta: { title: '首页', icon: 'el-icon-s-home' }
+  },
+  {
+    path: '/newsindex',
+    name: 'newsIndex',
+    component: () => import('@/views/News/index')
+  },
+  {
+    path: '/news',
+    name: 'news',
+    component: () => import('@/views/News/newsDetail')
   },
   {
     path: '/',
@@ -42,40 +52,40 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: {title: '数据面板', icon: 'dashboard'}
+      meta: { title: '数据面板', icon: 'dashboard' }
     }]
   },
   {
     path: '/patientManage',
     component: Layout,
     name: 'bookManage',
-    meta: {title: '病患管理系统', icon: 'el-icon-s-order'},
+    meta: { title: '病患管理系统', icon: 'el-icon-s-order' },
     children: [{
       path: 'user',
       name: 'user',
       component: () => import('@/views/patientManage/user.vue'),
-      meta: {title: '用户管理', icon: 'el-icon-document'}
+      meta: { title: '用户管理', icon: 'el-icon-document' }
     }, {
       path: 'book',
       name: 'book',
       component: () => import('@/views/patientManage/patient.vue'),
-      meta: {title: '病患管理', icon: 'el-icon-s-claim'}
+      meta: { title: '病患管理', icon: 'el-icon-s-claim' }
     }, {
       path: 'read',
       name: 'read',
       component: () => import('@/views/patientManage/diagnosis.vue'),
-      meta: {title: '检查记录管理', icon: 'el-icon-s-marketing'}
+      meta: { title: '检查记录管理', icon: 'el-icon-s-marketing' }
     }
     ]
   },
 
   // 404 page must be placed at the end !!!
-  {path: '*', redirect: '/404', hidden: true}
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({y: 0}),
+  scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
 
