@@ -154,6 +154,7 @@ class DiagnosisManage:
         data = request.pd.get('data')
         inputmsg = data['input']
         dia = data['diares']
+        print(inputmsg)
         res = diagnosisPatient.Chat(inputmsg, dia)
         return JsonResponse(res)
 

@@ -169,13 +169,13 @@ export default {
         };
         this.sendMsg(chatMsg);
         this.$emit('personCardSort', this.frinedInfo.id)
-        this.inputMsg = "";
         let commit = {
           input: this.inputMsg,
           diares: this.diaresult
         }
         this.isSend = true;
         this.loading = true;
+        this.inputMsg = ''
         let chatGPT = {
           headImg: require("@/assets/img/head_portrait1.jpg"),
           name: "Chat-Med",
@@ -188,7 +188,7 @@ export default {
         const reply = await chat(commit)
         this.diaresult = reply.msg
         this.loading = false
-        this.chatList[this.chatList.length - 1].msg = this.diaresult;
+        this.chatList[this.chatList.length - 1].msg = this.diaresult
         this.isSend = false
       } else {
         this.$message({

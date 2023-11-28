@@ -3,8 +3,12 @@ import json
 import os
 import pickle
 import traceback
+import openai
+from PIL import Image
 import base64
 import io
+from transformers import AutoProcessor
+from transformers import AutoModelForCausalLM
 from docx.shared import Mm
 import numpy as np
 import requests
@@ -286,11 +290,9 @@ class diagnosisPatient(models.Model):
 
     @staticmethod
     def Chat(input, diares):
+        """
         def get_access_token():
-            """
             使用 API Key，Secret Key 获取access_token，替换下列示例中的应用API Key、应用Secret Key
-            """
-
             url = "https://aip.baidubce.com/oauth/2.0/token?client_id=i3oRhMo92TNC3uMd05XxpwBS&client_secret=m8lNkXpyvQ2MrW8gUK6CUMDaSHBlkC74&grant_type=client_credentials"
 
             payload = json.dumps("")
@@ -318,76 +320,119 @@ class diagnosisPatient(models.Model):
 
         response = requests.request("POST", url, headers=headers, data=payload)
         data = json.loads(response.text)
-        return {'code': 200, 'msg': data['result']}
+        """
+
+        # 替换为你的实际OpenAI API密钥
+        openai_api_key = "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"
+
+        # API endpoint
+        api_url = "https://api.openai.com/v1/chat/completions"
+
+        # 请求头
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {openai_api_key}"
+        }
+
+        # 请求体
+        data = {
+            "model": "gpt-3.5-turbo",
+            "messages": [{"role": "user", "content": "请注意，回答请尽量简短！我的肺部x光诊断结果为" + diares + "。注意请你先以我的诊断结果（中文）为开头！我的问题是：" + input}],
+            "temperature": 0.7
+        }
+        print("diares:", diares)
+        print("input:", input)
+        print(data["messages"])
+
+        # 发送POST请求
+        response = requests.post(api_url, json=data, headers=headers)
+
+        # 处理响应
+        if response.status_code == 200:
+            result = response.json()
+            print("Generated message:", result["choices"][0]["message"]["content"])
+        else:
+            print(f"Error: {response.status_code}\n{response.text}")
+
+        return {'code': 200, 'msg': result["choices"][0]["message"]["content"]}
 
     @staticmethod
     def Diagnosis(diagnosisTime, picName):
-        def chexnet(input_shape=(224, 224, 3), weights_path=None):
-            input_layer = Input(shape=input_shape, name='input_1')
-            densenet = DenseNet121(weights=None, include_top=False, input_tensor=input_layer)
+        # def chexnet(input_shape=(224, 224, 3), weights_path=None):
+        #     input_layer = Input(shape=input_shape, name='input_1')
+        #     densenet = DenseNet121(weights=None, include_top=False, input_tensor=input_layer)
+        #
+        #     if weights_path is not None:
+        #         densenet.load_weights(weights_path, by_name=True)
+        #
+        #     x = densenet.output
+        #     x = GlobalAveragePooling2D()(x)
+        #     x = Dropout(0.5)(x)
+        #     predictions = Dense(14, activation='sigmoid', kernel_regularizer=l2(0.0001))(x)
+        #     model = Model(inputs=densenet.input, outputs=predictions)
+        #
+        #     return model
+        #
+        # # Define the input shape of the model
+        # input_shape = (224, 224, 3)
+        #
+        # # Load the pre-trained CheXNet model
+        # base_model = chexnet(input_shape=input_shape,
+        #                      weights_path='/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/brucechou1983_CheXNet_Keras_0.3.0_weights.h5')
+        #
+        # # Function to encode a given image into a vector
+        # def encode(image):
+        #     image = preprocess_input(image)  # preprocess the image
+        #     fea_vec = base_model.predict(image)  # Get the encoding vector for the image
+        #     fea_vec = np.reshape(fea_vec, fea_vec.shape[1])  # reshape
+        #     return fea_vec
 
-            if weights_path is not None:
-                densenet.load_weights(weights_path, by_name=True)
-
-            x = densenet.output
-            x = GlobalAveragePooling2D()(x)
-            x = Dropout(0.5)(x)
-            predictions = Dense(14, activation='sigmoid', kernel_regularizer=l2(0.0001))(x)
-            model = Model(inputs=densenet.input, outputs=predictions)
-
-            return model
-
-        # Define the input shape of the model
-        input_shape = (224, 224, 3)
-
-        # Load the pre-trained CheXNet model
-        base_model = chexnet(input_shape=input_shape,
-                             weights_path='/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/brucechou1983_CheXNet_Keras_0.3.0_weights.h5')
-
-        # Function to encode a given image into a vector
-        def encode(image):
-            image = preprocess_input(image)  # preprocess the image
-            fea_vec = base_model.predict(image)  # Get the encoding vector for the image
-            fea_vec = np.reshape(fea_vec, fea_vec.shape[1])  # reshape
-            return fea_vec
-
-        encoding = {}
+        # encoding = {}
         print(picName)
+        # img_path = '/Users/junjie/Documents/GitHub/Untitled/backend/media/' + picName
+        # file_name = os.path.basename(img_path)
+        # img = load_img(img_path, target_size=input_shape[:2])
+        # x = img_to_array(img)
+        # x = np.expand_dims(x, axis=0)
+        # encoding[file_name] = encode(x)
+        #
+        # # Save the encoding vectors as a pickle file
+        # with open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/encodings.pkl", "wb") as f:
+        #     pickle.dump(encoding, f)
+        #
+        # features = pickle.load(
+        #     open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/encodings.pkl", "rb"))
+        # model = load_model('/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/model_3.h5')
+        # max_length = 124
+        # words_to_index = pickle.load(
+        #     open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/words.pkl", "rb"))
+        # index_to_words = pickle.load(
+        #     open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/words1.pkl", "rb"))
+        #
+        # def Image_Caption(picture):
+        #     in_text = 'startseq'
+        #     for i in range(max_length):
+        #         sequence = [words_to_index[w] for w in in_text.split() if w in words_to_index]
+        #         sequence = pad_sequences([sequence], maxlen=max_length)
+        #         yhat = model.predict([np.repeat(picture, len(sequence), axis=0), sequence], verbose=0)
+        #         yhat = np.argmax(yhat)
+        #         word = index_to_words[yhat]
+        #         in_text += ' ' + word
+        #         if word == 'endseq':
+        #             break
+        #     return in_text
+        #
+        # pic = list(features.keys())[0]
+        # image = features[pic].reshape((1, 14))
+        # Caption = Image_Caption(image)
+        # print("Caption:", Caption)
+        processor = AutoProcessor.from_pretrained("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/saved_model")
+        model = AutoModelForCausalLM.from_pretrained("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/saved_model")
         img_path = '/Users/junjie/Documents/GitHub/Untitled/backend/media/' + picName
-        file_name = os.path.basename(img_path)
-        img = load_img(img_path, target_size=input_shape[:2])
-        x = img_to_array(img)
-        x = np.expand_dims(x, axis=0)
-        encoding[file_name] = encode(x)
-
-        # Save the encoding vectors as a pickle file
-        with open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/encodings.pkl", "wb") as f:
-            pickle.dump(encoding, f)
-
-        features = pickle.load(
-            open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/encodings.pkl", "rb"))
-        model = load_model('/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/model_3.h5')
-        max_length = 124
-        words_to_index = pickle.load(
-            open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/words.pkl", "rb"))
-        index_to_words = pickle.load(
-            open("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/words1.pkl", "rb"))
-
-        def Image_Caption(picture):
-            in_text = 'startseq'
-            for i in range(max_length):
-                sequence = [words_to_index[w] for w in in_text.split() if w in words_to_index]
-                sequence = pad_sequences([sequence], maxlen=max_length)
-                yhat = model.predict([np.repeat(picture, len(sequence), axis=0), sequence], verbose=0)
-                yhat = np.argmax(yhat)
-                word = index_to_words[yhat]
-                in_text += ' ' + word
-                if word == 'endseq':
-                    break
-            return in_text
-
-        pic = list(features.keys())[0]
-        image = features[pic].reshape((1, 14))
-        Caption = Image_Caption(image)
-        print("Caption:", Caption)
-        return {'code': 200, 'msg': Caption}
+        image = Image.open(img_path)
+        inputs = processor(images=image, return_tensors="pt")
+        pixel_values = inputs.pixel_values
+        generated_ids = model.generate(pixel_values=pixel_values, max_length=50)
+        generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        print(generated_caption)
+        return {'code': 200, 'msg': generated_caption}
