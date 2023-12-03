@@ -66,13 +66,13 @@ export const constantRoutes = [
       component: () => import('@/views/patientManage/user.vue'),
       meta: { title: '用户管理', icon: 'el-icon-document' }
     }, {
-      path: 'book',
-      name: 'book',
+      path: 'patient',
+      name: 'patient',
       component: () => import('@/views/patientManage/patient.vue'),
       meta: { title: '病患管理', icon: 'el-icon-s-claim' }
     }, {
-      path: 'read',
-      name: 'read',
+      path: 'diagnosis',
+      name: 'diagnosis',
       component: () => import('@/views/patientManage/diagnosis.vue'),
       meta: { title: '检查记录管理', icon: 'el-icon-s-marketing' }
     }
