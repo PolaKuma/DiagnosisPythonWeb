@@ -11,7 +11,7 @@
         <el-input v-model="value" autocomplete="off" style="width: 500px; margin: 20px"/>
         <el-button type="primary" @click="onState">搜素</el-button>
       </div>
-      <el-button type="primary" @click="showForm">添加患者</el-button>
+      <el-button type="primary" icon="el-icon-edit" @click="showForm">添加患者</el-button>
 
     </div>
     <el-table v-loading="loading" :data="tableData" style="width: 100%">
@@ -22,8 +22,7 @@
       <el-table-column prop="patientSex" label="性别" align="center" width="180"/>
       <el-table-column prop="date" label="生日" align="center" width="180"/>
       <el-table-column prop="doctor" label="主治医师" align="center"/>
-      <el-table-column prop="report" label="报告" align="center" width="180"/>
-      <el-table-column label="操作" align="center" width="300">
+      <el-table-column label="操作" align="center" width="300" fixed="right">
         <template v-slot="{row}">
           <el-button type="success" size="mini" @click="diagnosisPatient(row)">诊断</el-button>
           <el-button type="primary" size="mini" @click="showForm(row)">编辑</el-button>

@@ -13,7 +13,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="300px">
+      <el-table-column label="操作" align="center" width="300px" fixed="right">
         <template v-slot="{row}">
           <el-button type="success" v-if="!row.returntime" @click="returnbook(row)" size='mini'>完成</el-button>
           <el-button type="primary" v-if="!row.returntime" @click="generateReport(row)" size="mini">报告生成</el-button>

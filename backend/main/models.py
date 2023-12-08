@@ -66,12 +66,16 @@ class User(AbstractUser):
             return {'code': 500, 'msg': err}
 
     @staticmethod
-    def listUser(pagenum, pagesize):
+    def listUser(pagenum, pagesize,Username):
         try:
-            # .order_by('-id') 表示按照 id字段的值 倒序排列
-            # 这样可以保证最新的记录显示在最前面
-            # 获取到所有的用户信息，然后去倒叙排列
-            qs = User.objects.values().order_by('-id')
+            print(Username)
+            if Username != "None":
+                qs = User.objects.filter(realname__icontains=Username.strip()).values().order_by('-id')
+            else:
+                # .order_by('-id') 表示按照 id字段的值 倒序排列
+                # 这样可以保证最新的记录显示在最前面
+                # 获取到所有的用户信息，然后去倒叙排列
+                qs = User.objects.values().order_by('-id')
 
             # 使用分页对象，设定每页多少条记录
             pgnt = Paginator(qs, pagesize)
