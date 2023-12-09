@@ -1,9 +1,8 @@
 <template>
   <div class="shift">
     <div class="title">
-      <p>安逸医院护士值班表</p>
     </div>
-    <div class="filter-container">
+    <div class="search">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="请输入姓名"
                 v-model="searchName"></el-input>
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="请输入科室"
@@ -19,7 +18,7 @@
       <el-button class="filter-item" type="primary" icon="el-icon-share" @click="handleDownload">导出</el-button>
     </div>
 
-    <el-table v-if="table" :data="table" border style="width: 100%" height="400">
+    <el-table :header-cell-style="{background:'#f5f7fa',color:'#606266'}" v-if="table" :data="table" border style="width: 100%" height="400">
       <el-table-column label="序号" width="120" fixed>
         <template scope="scope">{{ scope.$index }}</template>
       </el-table-column>
@@ -30,7 +29,7 @@
       <el-table-column prop="department" label="科室" width="150"></el-table-column>
       <el-table-column prop="phone" label="电话号码" width="150"></el-table-column>
       <el-table-column prop="attendence" label="出勤情况" width="120" v-model="listQuery.type"></el-table-column>
-      <el-table-column prop="signature" label="护士长签名" width="120"></el-table-column>
+      <el-table-column prop="signature" label="负责人" width="120"></el-table-column>
       <el-table-column align="center" label="操作" fixed="right" width="200px">
         <template scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index)">编辑</el-button>
@@ -38,6 +37,19 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      background
+      style="margin-top: 20px;text-align: center"
+      :current-page="pageNum"
+      :page-size="pageSize"
+      :total="total"
+      :pager-count="10"
+      :page-sizes="[10,15,30]"
+      layout="prev,pager,next,jumper,->,sizes,total"
+      @current-change="getUserList"
+      @size-change="handleSizeChange"
+    />
+
     <!--  添加信息表单 -->
     <el-dialog title="添加信息" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="form" label-position="left" label-width="70px"
@@ -308,4 +320,22 @@ export default {
 </script>
 
 <style>
+.shift{
+  height: 700px;
+  width: 1160px;
+  background-color: white;
+  box-shadow: 0 15px 30px rgba(0,0,0,.3);
+}
+
+.search {
+  padding: 30px;
+  padding-bottom: 10px;
+}
+
+.el-button {
+  margin-left: 10px;
+  margin-bottom: 30px;
+  border-radius: 10%;
+  margin-left: 30px;
+}
 </style>

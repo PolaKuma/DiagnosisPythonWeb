@@ -1,5 +1,5 @@
 <template>
-  <div id="index" ref="appRef">
+  <div id="index" ref="appRef" class="all">
     <div class="bg">
       <dv-loading v-show="loading">Loading...</dv-loading>
       <div class="host-body">
@@ -7,23 +7,29 @@
           <!-- 顶部title部分 -->
           <el-row>
             <el-col :span="6"
-              ><dv-decoration-8
+            >
+              <dv-decoration-8
                 class="title_right"
                 :color="['#008CFF', '#00ADDD']"
-            /></el-col>
+              />
+            </el-col>
             <el-col :span="12"
-              ><div class="title_text">数 据 可 视 化 系 统</div>
+            >
+              <div class="title_text">医 疗 可 视 化 系 统</div>
               <dv-decoration-5
                 class="title_center"
                 :color="['#008CFF', '#00ADDD']"
-            /></el-col>
+              />
+            </el-col>
             <el-col :span="6"
-              ><div class="title_time">{{ dateYear + dateWeek + dateDay }}</div>
+            >
+              <div class="title_time">{{ dateYear + dateWeek + dateDay }}</div>
               <dv-decoration-8
                 :reverse="true"
                 class="title_left"
                 :color="['#008CFF', '#00ADDD']"
-            /></el-col>
+              />
+            </el-col>
           </el-row>
           <!-- 主体部分 -->
           <el-row>
@@ -45,8 +51,8 @@
                     <p>
                       <span class="coin">￥</span>
                       <span class="rose_text_nmb">{{
-                        item.number.number
-                      }}</span>
+                          item.number.number
+                        }}</span>
                     </p>
                     <p>
                       <span>{{ item.text }}</span>
@@ -90,7 +96,8 @@
               <div class="right_box1">
                 <dv-border-box-12>
                   <dv-decoration-7 style="width: 100%; height: 30px"
-                    >销 售 排 行 榜</dv-decoration-7
+                  >诊 断 数 排 行 榜
+                  </dv-decoration-7
                   >
                   <dv-scroll-ranking-board
                     :config="config"
@@ -107,7 +114,7 @@
               <!-- 部分 -->
               <div class="right_box3">
                 <dv-border-box-12 :reverse="true">
-                  <dv-conical-column-chart :config="cone" class="cone_box" />
+                  <dv-conical-column-chart :config="cone" class="cone_box"/>
                 </dv-border-box-12>
               </div>
             </el-col>
@@ -120,8 +127,9 @@
 
 <script>
 import drawMixin from "@/utils/drawMixin"; //自适应缩放
-import { formatTime } from "@/utils/month"; //日期格式转换
+import {formatTime} from "@/utils/month"; //日期格式转换
 import * as echarts from "echarts";
+
 export default {
   mixins: [drawMixin],
   data() {
@@ -585,44 +593,6 @@ export default {
           },
           data: res, //拿到射线的起始点和结束点
         },
-        //散点图
-        // {
-        //   type: "effectScatter",//散点图
-        //   coordinateSystem: "geo",//这个不能删，删了不显示
-        //   zlevel: 1,
-        //   rippleEffect: {
-        //     //涟漪特效
-        //     period: 4, //动画时间，值越小速度越快
-        //     brushType: "stroke", //波纹绘制方式 stroke, fill
-        //     scale: 4, //波纹圆环最大限制，值越大波纹越大
-        //   },
-        //   //设置文字部分
-        //   label: {
-        //     normal: {
-        //       show: true, //省份名显示隐藏
-        //       position: "right", //省份名显示位置
-        //       offset: [5, 0], //省份名偏移设置
-        //       formatter: function (params) {
-        //         //圆环显示省份名
-        //         return params.name;  //这个名字是根据data中的name来显示的
-        //       },
-        //       fontSize: 12,//文字大小
-        //     },
-        //     emphasis: {
-        //       show: true,
-        //     },
-        //   },
-        //   symbol: "circle",//散点图
-        //   symbolSize: 5,//散点大小
-        //   itemStyle: {//散点样式
-        //     normal: {
-        //       show: true,
-        //       color: "#fff",
-        //     },
-        //   },
-        //   data: data_res, //处理好后的散点图坐标数组
-        // },
-        //点击高亮
         {
           type: "map",
           mapType: "china",
@@ -655,14 +625,6 @@ export default {
       );
       //配置
       let option = {
-        //title可要可不要
-
-        // title: {
-        //   text: "查查的地图",
-        //   textStyle: {
-        //     color: "#ffffff",
-        //   },
-        // },
         legend: {
           show: true,
           selected: {},
@@ -760,12 +722,12 @@ export default {
             roseType: "area",
             center: ["50%", "40%"],
             data: [
-              { value: 10, name: "data1" },
-              { value: 5, name: "data2" },
-              { value: 15, name: "data3" },
-              { value: 25, name: "data4" },
-              { value: 20, name: "data5" },
-              { value: 35, name: "data6" },
+              {value: 10, name: "data1"},
+              {value: 5, name: "data2"},
+              {value: 15, name: "data3"},
+              {value: 25, name: "data4"},
+              {value: 20, name: "data5"},
+              {value: 35, name: "data6"},
             ],
           },
         ],
@@ -850,7 +812,7 @@ export default {
         },
         yAxis: [
           {
-            splitLine: { show: false },
+            splitLine: {show: false},
             axisLine: {
               lineStyle: {
                 color: "#B4B4B4",
@@ -871,8 +833,8 @@ export default {
               normal: {
                 barBorderRadius: 5,
                 color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "#956FD4" },
-                  { offset: 1, color: "#3EACE5" },
+                  {offset: 0, color: "#956FD4"},
+                  {offset: 1, color: "#3EACE5"},
                 ]),
               },
             },
@@ -891,9 +853,9 @@ export default {
               normal: {
                 barBorderRadius: 5,
                 color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "rgba(156,107,211,0.8)" },
-                  { offset: 0.2, color: "rgba(156,107,211,0.5)" },
-                  { offset: 1, color: "rgba(156,107,211,0.2)" },
+                  {offset: 0, color: "rgba(156,107,211,0.8)"},
+                  {offset: 0.2, color: "rgba(156,107,211,0.5)"},
+                  {offset: 1, color: "rgba(156,107,211,0.2)"},
                 ]),
               },
             },
@@ -1036,7 +998,7 @@ export default {
           },
         },
         yAxis: {
-          splitLine: { show: false },
+          splitLine: {show: false},
           axisLine: {
             lineStyle: {
               color: "#ccc",
@@ -1061,8 +1023,8 @@ export default {
               borderRadius: 5,
               // color: "#14c8d4",
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "#14c8d4" },
-                { offset: 1, color: "#43eec6" },
+                {offset: 0, color: "#14c8d4"},
+                {offset: 1, color: "#43eec6"},
               ]),
             },
             data: barData,
@@ -1075,9 +1037,9 @@ export default {
             itemStyle: {
               // color: "rgba(20,200,212,0.5)",
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "rgba(20,200,212,0.5)" },
-                { offset: 0.2, color: "rgba(20,200,212,0.2)" },
-                { offset: 1, color: "rgba(20,200,212,0)" },
+                {offset: 0, color: "rgba(20,200,212,0.5)"},
+                {offset: 0.2, color: "rgba(20,200,212,0.2)"},
+                {offset: 1, color: "rgba(20,200,212,0)"},
               ]),
             },
             z: -12,
@@ -1105,18 +1067,12 @@ export default {
 </script>
 
 <style lang="scss">
-//全局样式部分！！！！
-* {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  outline: none;
-  box-sizing: border-box;
-}
+
 html {
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.2em;
@@ -1124,10 +1080,12 @@ body {
   margin: 0;
   padding: 0;
 }
+
 a {
   color: #343440;
   text-decoration: none;
 }
+
 //--------------------------------------------
 
 //页面样式部分！！！！
@@ -1141,6 +1099,7 @@ a {
   transform: translate(-50%, -50%);
   transform-origin: left top;
   overflow: hidden;
+
   .bg {
     //整体页面背景
     width: 100%;
@@ -1150,22 +1109,26 @@ a {
     background-size: cover; //背景尺寸
     background-position: center center; //背景位置
   }
+
   //顶部右边装饰效果
   .title_left {
     width: 100%;
     height: 50px;
   }
+
   //顶部左边装饰效果
   .title_right {
     width: 100%;
     height: 50px;
     margin-top: 18px;
   }
+
   //顶部中间装饰效果
   .title_center {
     width: 100%;
     height: 50px;
   }
+
   //顶部中间文字数据可视化系统
   .title_text {
     text-align: center;
@@ -1174,20 +1137,24 @@ a {
     margin-top: 14px;
     color: #008cff;
   }
+
   //时间日期
   .title_time {
     text-align: center;
   }
+
   //中国地图
   #china-map {
     height: 660px;
     width: 100%;
   }
+
   //中间折线图
   .line_center {
     width: 100%;
     height: 288px;
   }
+
   //左1模块
   .left_box1 {
     height: 310px;
@@ -1195,39 +1162,46 @@ a {
     margin-bottom: 10px;
     position: relative;
   }
+
   //左2模块
   .left_box2 {
     height: 310px;
     width: 100%;
     margin-bottom: 10px;
   }
+
   //左3模块
   .left_box3 {
     height: 310px;
     width: 100%;
   }
+
   //右1模块
   .right_box1 {
     height: 310px;
     width: 100%;
     margin-bottom: 10px;
   }
+
   //右2模块
   .right_box2 {
     height: 310px;
     width: 100%;
     margin-bottom: 10px;
   }
+
   //右3模块
   .right_box3 {
     height: 310px;
     width: 100%;
   }
+
   //左1模块-玫瑰饼图
   #Rose_diagram {
     height: 70%;
     width: 55%;
   }
+
   //左1模块-圆环图
   .left_box1_rose_right {
     height: 85%;
@@ -1236,26 +1210,31 @@ a {
     right: 0;
     top: 0;
   }
+
   //左1模块-文字部分
   .rose_text {
     display: inline-block;
     margin-top: 4%;
     margin-left: 4%;
   }
+
   // 左1模块-￥符号样式
   .coin {
     font-size: 20px;
     color: #ffc107;
   }
+
   //左1模块-（件）样式
   .colorYellow {
     color: yellowgreen;
   }
+
   //左1模块-数字样式
   .rose_text_nmb {
     font-size: 20px;
     color: #00b891;
   }
+
   //左2模块 柱状图
   #columnar {
     height: 97%;
@@ -1263,27 +1242,36 @@ a {
     margin-left: 3%;
     margin-top: 5px;
   }
+
   //折线图
   #line_center_diagram {
     height: 100%;
     width: 100%;
   }
+
   //轮播表格
   .carousel_list {
     width: 96%;
     height: 98%;
     margin-left: 10px;
   }
+
   //虚线柱状图
   #dotter_bar {
     width: 100%;
     height: 100%;
   }
+
   //锥形图
   .cone_box {
     width: 95%;
     height: 97%;
     margin-left: 3%;
   }
+}
+
+.all{
+  padding: 10px;
+  margin: 10px;
 }
 </style>

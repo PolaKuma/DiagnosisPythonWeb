@@ -1,10 +1,15 @@
 <template>
   <div class="staffFlow">
-    <span class="tittle">人员流动记录信息表</span>
+    <div class="search">
+      <el-input style="width: 200px;" placeholder="医生ID" v-model="searchID"></el-input>
+      <el-button type="primary" icon="el-icon-search" @click="onState">搜索</el-button>
+      <el-button type="primary" icon="" @click="getAll">显示全部</el-button>
+    </div>
     <div class="replyBtn">
       <el-button size="big" icon="el-icon-edit" type="primary" @click="handleCreate">添加离职人员信息</el-button>
     </div>
-    <el-table :data="staffFlowlist" style="width: 100%;" height="500">
+    <el-table :header-cell-style="{background:'#f5f7fa',color:'#606266'}" :data="staffFlowlist" style="width: 100%;"
+              height="400">
       <!-- <el-table-column label="人员流动信息表" class="tittle"> -->
       <el-table-column type="expand">
         <template scope="props">
@@ -42,6 +47,19 @@
       </el-table-column>
       <!-- </el-table-column> -->
     </el-table>
+    <el-pagination
+      background
+      style="margin-top: 20px;text-align: center"
+      :current-page="pageNum"
+      :page-size="pageSize"
+      :total="total"
+      :pager-count="10"
+      :page-sizes="[10,15,30]"
+      layout="prev,pager,next,jumper,->,sizes,total"
+      @current-change="getUserList"
+      @size-change="handleSizeChange"
+    />
+
     <el-dialog title="添加人员流动信息" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="form" label-position="left" label-width="70px"
                style='width: 400px; padding-left:50px;'>
@@ -180,6 +198,23 @@ export default {
   },
 };
 </script>
-
 <style scoped>
+.staffFlow {
+  width: 1160px;
+  height: 500px;
+  background-color: white;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, .3);
+}
+
+.search {
+  padding: 30px;
+  padding-bottom: 10px;
+}
+
+.el-button {
+  margin-left: 10px;
+  margin-bottom: 30px;
+  border-radius: 10%;
+  margin-left: 30px;
+}
 </style>

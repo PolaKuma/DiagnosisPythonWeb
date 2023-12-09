@@ -13,7 +13,7 @@
               </div>
             </div>
             <div class="login-info">
-              <p>上次登录时间: 2022/07/06 18:16</p>
+              <p>入职日期: 2022/07/06 18:16</p>
             </div>
           </el-card>
           <!-- 首页表格 -->
@@ -48,7 +48,7 @@
         </div>
       </el-col>
       <el-col :span="16">
-        <!-- 六个订单信息 -->
+        <!-- 两个订单信息 -->
         <div class="num">
           <el-card shadow='hover' v-for="item in countData" :key="item.name"
                    :body-style="{ display: 'flex',padding: 0 }" class="OrderCard">

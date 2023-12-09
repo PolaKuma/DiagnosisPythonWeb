@@ -65,35 +65,15 @@ export const constantRoutes = [
     }]
   },
   {
-    path: '/',
+    path: '/doctorManage',
     component: Layout,
-    children: [{
-      path: 'test',
-      component: () => import('@/views/test/index.vue'),
-      name: 'test',
-      meta: { title: '测试页面', icon: 'dashboard' }
-    }]
-  },
-  {
-    path: '/patientManage',
-    component: Layout,
-    name: 'bookManage',
-    meta: {title: '病患管理系统', icon: 'el-icon-s-order'},
+    name: 'doctorManage',
+    meta: {title: '医护人员管理系统', icon: 'el-icon-s-order'},
     children: [{
       path: 'user',
       name: 'user',
       component: () => import('@/views/patientManage/user.vue'),
       meta: {title: '用户管理', icon: 'el-icon-document'}
-    }, {
-      path: 'patient',
-      name: 'patient',
-      component: () => import('@/views/patientManage/patient.vue'),
-      meta: {title: '病患管理', icon: 'el-icon-s-claim'}
-    }, {
-      path: 'diagnosis',
-      name: 'diagnosis',
-      component: () => import('@/views/patientManage/diagnosis.vue'),
-      meta: {title: '检查记录管理', icon: 'el-icon-s-marketing'}
     }, {
       path: 'flow',
       name: 'flow',
@@ -109,7 +89,25 @@ export const constantRoutes = [
       name: 'shift',
       component: () => import('@/views/patientManage/shift.vue'),
       meta: {title: '值班安排', icon: 'el-icon-s-marketing'}
-    },
+    }
+    ]
+  },
+  {
+    path: '/patientManage',
+    component: Layout,
+    name: 'patientManage',
+    meta: {title: '病患管理系统', icon: 'el-icon-s-order'},
+    children: [{
+      path: 'patient',
+      name: 'patient',
+      component: () => import('@/views/patientManage/patient.vue'),
+      meta: {title: '病患管理', icon: 'el-icon-s-claim'}
+    }, {
+      path: 'diagnosis',
+      name: 'diagnosis',
+      component: () => import('@/views/patientManage/diagnosis.vue'),
+      meta: {title: '检查记录管理', icon: 'el-icon-s-marketing'}
+    }
     ]
   },
 

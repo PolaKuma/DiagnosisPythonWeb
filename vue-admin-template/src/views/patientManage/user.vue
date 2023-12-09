@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <div class="tittle">医生信息表</div>
+  <div class="all">
     <div class="search">
       <el-input style="width: 200px;" placeholder="医生姓名" v-model="searchName"></el-input>
       <el-button type="primary" icon="el-icon-search" @click="onState">搜索</el-button>
       <el-button type="primary" icon="" @click="getAll">显示全部</el-button>
     </div>
     <el-button type="primary" icon="el-icon-edit" v-if="usertype===1" @click="AddForm">增加人员</el-button>
-    <el-table :data="tableData" v-loading="loading" id="out-table" border height="500" style="width: 100%">
+    <el-table :header-cell-style="{background:'#f5f7fa',color:'#606266'}" :data="tableData" v-loading="loading" id="out-table" border height="450" style="width: 100%">
       <el-table-column type="index" label="序号" align="center" width="70"/>
       <el-table-column prop="doctorno" label="工号" align="center" width="130"/>
       <el-table-column prop="username" label="登录名" align="center" width="130"/>
@@ -33,8 +32,8 @@
         :current-page="pageNum"
         :page-size="pageSize"
         :total="total"
-        :pager-count="5"
-        :page-sizes="[5,15,30]"
+        :pager-count="10"
+        :page-sizes="[10,15,30]"
         layout="prev,pager,next,jumper,->,sizes,total"
         @current-change="getUserList"
         @size-change="handleSizeChange"
@@ -199,23 +198,19 @@ export default {
 </script>
 
 <style scoped>
-.tittle {
-  margin-bottom: 10px;
-  text-align: center;
-  font-size: 20px;
+.all{
+  background-color: white;
+  box-shadow: 0 15px 30px rgba(0,0,0,.3);
 }
-
 .search {
-  padding: 10px;
+  padding: 30px;
+  padding-bottom: 10px;
 }
 
 .el-button {
   margin-left: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   border-radius: 10%;
-}
-
-.el-table{
-  border-radius: 20px;
+  margin-left: 30px;
 }
 </style>
