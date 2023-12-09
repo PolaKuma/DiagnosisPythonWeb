@@ -64,7 +64,7 @@ export default {
     & .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: grey;
+      color: black;
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;

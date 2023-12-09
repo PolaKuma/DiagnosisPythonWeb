@@ -55,7 +55,7 @@ export default {
           break
         case 3:
           this.$router.push({
-            name: 'read'
+            name: 'diagnosis'
           })
           break
         default:

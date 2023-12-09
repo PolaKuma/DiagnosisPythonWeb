@@ -41,20 +41,20 @@ new Vue({
   render: h => h(App)
 })
 
-import API from'@/api'
-Vue.prototype.$API =API
+import API from '@/api'
+Vue.prototype.$API = API
 
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
 import geoJson from '@/assets/china.json'
-echarts.registerMap('china', geoJson);
+echarts.registerMap('china', geoJson)
 
 // 将自动注册所有组件为全局组件
 import dataV from '@jiaminghi/data-view'
 Vue.use(dataV)
 
-import jsPDF from "jspdf";
+import jsPDF from 'jspdf'
 Vue.use(jsPDF)
 
 import html2Canvas from 'html2canvas'

@@ -210,6 +210,7 @@ export default {
 
 <style>
 .importants h1 {
+  padding-top: 10px;
   font-size: 22px;
   margin: 0 0 20px 0;
 }

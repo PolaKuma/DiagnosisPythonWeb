@@ -8,7 +8,7 @@
             <div class="userCard">
               <el-avatar :size="150" :src=imgUrl></el-avatar>
               <div class="userInfo">
-                <p class="important-font">Admin</p>
+                <p class="important-font" v-text="name"></p>
                 <p class="secondary-font">管理员</p>
               </div>
             </div>
@@ -54,8 +54,8 @@
                    :body-style="{ display: 'flex',padding: 0 }" class="OrderCard">
             <i class="icon" :class="'el-icon-'+item.icon" :style="{ background: item.color}"></i>
             <div>
-              <p class="important-font">￥{{ item.value }}</p>
-              <p class="secondary-font">{{ item.name }}</p>
+              <p class="important-font numa">￥{{ item.value }}</p>
+              <p class="secondary-font numa">{{ item.name }}</p>
             </div>
           </el-card>
         </div>
@@ -64,11 +64,8 @@
           <div style="height:280px;" ref="barEcharts">{{ initBarEcharts() }}</div>
         </el-card>
         <div class="num graph">
-          <el-card style="width: 34%;height: 265px;marginRight: 1%">
-            <div style="width: 100%;height: 265px;" ref="pieEcharts">{{ initPieEcharts() }}</div>
-          </el-card>
-          <el-card style="width:65%;height: 265px">
-            <div style="height: 265px">
+          <el-card style="width:100%;">
+            <div style="">
               <el-calendar v-model="value"></el-calendar>
             </div>
           </el-card>
@@ -85,6 +82,7 @@ export default {
   name: "Index",
   data() {
     return {
+      name: 'admin',
       imgUrl: require('@/assets/img/head_portrait1.jpg'),
       value: new Date(),
       tableData: [{
@@ -237,7 +235,7 @@ export default {
 
 .important-font {
   font-weight: 900;
-  font-size: 25px;
+  font-size: 30px;
 }
 
 .secondary-font {
@@ -255,15 +253,16 @@ export default {
 }
 
 .OrderCard {
-  margin: 0 0 30px 30px;
+  margin: 0;
+  height:50px !important;
   border: #DCDFE6 1px solid;
   border-radius: 10px;
 
   i {
     width: 30%;
     line-height: 120px;
-    font-size: 30px;
-    color: #fff
+    font-size: 10px;
+    color: #fff;
   }
 
   div {

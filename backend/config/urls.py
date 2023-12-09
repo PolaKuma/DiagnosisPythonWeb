@@ -23,16 +23,25 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # 登录、注册、请求个人信息、修改密码
-    path('api/sign',v2.LoginAndOut().handle),
+    path('api/sign', v2.LoginAndOut().handle),
 
     # 用户增删改查
     path('api/user', v2.UserManage().handle),
 
     # 患者的增删改查、模糊查询
-    path('api/patients',v1.PatientsManage().handle),
+    path('api/patients', v1.PatientsManage().handle),
 
-    path('api/diagnosis',v1.DiagnosisManage().handle),
+    path('api/diagnosis', v1.DiagnosisManage().handle),
 
     # 患者的批量添加（待开发）
-    path('api/upload',v1.PatientsManage().upload)
+    path('api/upload', v1.PatientsManage().upload),
+
+    # 人员流动的增删查改
+    path('api/flows', v1.flowManage().handle),
+
+    # 投诉的增删查改
+    path('api/complaints', v1.complaintManage().handle),
+
+    # 排班的增删查改
+    path('api/duties', v1.dutyManage().handle)
 ]
