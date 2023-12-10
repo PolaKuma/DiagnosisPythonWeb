@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="all">
     <div>
       <div style="text-align: center">
         <el-select v-model="key" style="width: 120px" placeholder="请选择">
@@ -11,10 +11,10 @@
         <el-input v-model="value" autocomplete="off" style="width: 500px; margin: 20px"/>
         <el-button type="primary" @click="onState">搜素</el-button>
       </div>
-      <el-button type="primary" @click="showForm">添加患者</el-button>
+      <el-button class="add" type="primary" icon="el-icon-edit" @click="showForm">添加患者</el-button>
 
     </div>
-    <el-table v-loading="loading" :data="tableData" style="width: 100%">
+    <el-table :header-cell-style="{background:'#f5f7fa',color:'#606266'}" v-loading="loading" :data="tableData" style="width: 100%">
       <el-table-column type="index" label="序号" align="center" width="70"/>
       <el-table-column prop="id" label="病例号" align="center" width="300"/>
       <el-table-column prop="patientName" label="名字" align="center" width="300"/>
@@ -22,8 +22,7 @@
       <el-table-column prop="patientSex" label="性别" align="center" width="180"/>
       <el-table-column prop="date" label="生日" align="center" width="180"/>
       <el-table-column prop="doctor" label="主治医师" align="center"/>
-      <el-table-column prop="report" label="报告" align="center" width="180"/>
-      <el-table-column label="操作" align="center" width="300">
+      <el-table-column label="操作" align="center" width="330" fixed="right">
         <template v-slot="{row}">
           <el-button type="success" size="mini" @click="diagnosisPatient(row)">诊断</el-button>
           <el-button type="primary" size="mini" @click="showForm(row)">编辑</el-button>
@@ -38,8 +37,8 @@
       :current-page="pageNum"
       :page-size="pageSize"
       :total="total"
-      :pager-count="5"
-      :page-sizes="[5,15,30]"
+      :pager-count="10"
+      :page-sizes="[10,15,30]"
       layout="prev,pager,next,jumper,->,sizes,total"
       @current-change="getPatientList"
       @size-change="handleSizeChange"
@@ -151,7 +150,7 @@ export default {
     async getPatientList(pager = 1) {
       this.loading = true
       this.pageNum = pager
-      const {pageNum, pageSize} = this // 发送请求时候需要带参数
+      const { pageNum, pageSize } = this // 发送请求时候需要带参数
       const res = await this.$API.patient.reqPatients(pageNum, pageSize, this.key, this.value)
       if (res.code === 200) {
         this.tableData = res.msg
@@ -220,7 +219,6 @@ export default {
     onState() {
       this.getPatientList(1)
     },
-
     handleSizeChange(limit) {
       this.pageSize = limit
       this.getUserList()
@@ -266,4 +264,15 @@ export default {
   padding: 5px; /* 调整列之间的间距 */
 }
 
+.all{
+  height: 700px;
+  width: 1160px;
+  background-color: white;
+  box-shadow: 0 15px 30px rgba(0,0,0,.3);
+}
+
+.add{
+  margin-left: 30px;
+  margin-bottom: 30px;
+}
 </style>

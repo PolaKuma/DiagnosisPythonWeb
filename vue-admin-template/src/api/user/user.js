@@ -1,6 +1,6 @@
 import request  from "@/utils/request";
 
-export const reqUser = (pageNum,pageSize) => request({ url: `api/user` , method: 'post',data: {'action': 'listUser','pageNum': pageNum, 'pageSize': pageSize}})
+export const reqUser = (pageNum,pageSize,searchName) => request({ url: `api/user` , method: 'post',data: {'action': 'listUser','pageNum': pageNum, 'pageSize': pageSize, 'searchName': searchName}})
 
 export const reqSaveAndUpdateUser = (user,password) => {
 
@@ -12,6 +12,6 @@ export const reqSaveAndUpdateUser = (user,password) => {
 
 }
 
-export const delUser = (id) => request({ url: `api/user`,method: 'delete', data: {"action": "deleteOne","id": id } })
+export const delUser = (id) => request({ url: `api/user`,method: 'delete', data: {"action": "deleteOne","id": id }})
 
 export const reqPasswordUP = (data) => request( {url: `api/sign`,method: 'post',data: {"action": "uppd",'data': data}} )

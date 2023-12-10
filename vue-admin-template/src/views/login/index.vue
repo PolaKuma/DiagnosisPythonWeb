@@ -55,10 +55,9 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="success" style="width:48%;margin-bottom:30px;" @click="register">确认注册</el-button>
-      <el-button type="danger" style="width:48%" @click="next">返回登录页面</el-button>
+      <el-button :loading="loading" type="success" style="width:45% !important; border-radius: 0 !important; margin-bottom:30px;" @click="register">确认注册</el-button>
+      <el-button type="danger" style="width:45% !important; border-radius: 0 !important;" @click="next">返回登录页面</el-button>
     </el-form>
-
 
     <el-form ref="loginForm" v-else :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
@@ -79,7 +78,6 @@
           auto-complete="on"
         />
       </el-form-item>
-      <el-button type="text" style="left: 370px" @click="dialogFormVisible = true">忘记密码？</el-button>
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
@@ -99,8 +97,9 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-      <el-button :loading="loading" type="primary" style="width:48%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-      <el-button type="success" style="width:48%" @click="loginOrRegister = true">注册</el-button>
+      <el-button type="text" style="left: 370px; display: block !important;" @click="dialogFormVisible = true">忘记密码？</el-button>
+      <el-button :loading="loading" type="primary" style="width:45% !important; border-radius: 0 !important; margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button type="success" style="width:45% !important; border-radius: 0 !important;" @click="loginOrRegister = true">注册</el-button>
 
     </el-form>
   </div>
@@ -195,10 +194,10 @@ export default {
     },
     next(){
       this.loginOrRegister = false
-      this.loginForm =  {
+      this.loginForm = {
         username: '',
-        usertype:'',
-        realname:'',
+        usertype: '',
+        realname: '',
         desc: '',
         studentno: '',
         password: ''

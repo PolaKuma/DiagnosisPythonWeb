@@ -1,12 +1,17 @@
 <template>
-  <div>
-    <el-button type="primary" v-if="usertype===1" @click="AddForm">增加人员</el-button>
-    <el-table :data="tableData" v-loading="loading" style="width: 100%">
+  <div class="all">
+    <div class="search">
+      <el-input style="width: 200px;" placeholder="医生姓名" v-model="searchName"></el-input>
+      <el-button type="primary" icon="el-icon-search" @click="onState">搜索</el-button>
+      <el-button type="primary" icon="" @click="getAll">显示全部</el-button>
+    </div>
+    <el-button type="primary" icon="el-icon-edit" v-if="usertype===1" @click="AddForm">增加人员</el-button>
+    <el-table :header-cell-style="{background:'#f5f7fa',color:'#606266'}" :data="tableData" v-loading="loading" id="out-table" border height="450" style="width: 100%">
       <el-table-column type="index" label="序号" align="center" width="70"/>
-      <el-table-column prop="doctorno" label="工号" align="center" width="180"/>
-      <el-table-column prop="username" label="登录名" align="center" width="180"/>
-      <el-table-column prop="realname" label="姓名" align="center" width="180"/>
-      <el-table-column prop="usertype" label="职称" align="center" width="180">
+      <el-table-column prop="doctorno" label="工号" align="center" width="130"/>
+      <el-table-column prop="username" label="登录名" align="center" width="130"/>
+      <el-table-column prop="realname" label="姓名" align="center" width="130"/>
+      <el-table-column prop="usertype" label="职称" align="center" width="130">
         <template v-slot="{row}">
           <el-tag :type="row.usertype === 1 ? 'dark' : '' " effect="danger">
             {{ row.usertype === 1 ? "主任" : "医师" }}
@@ -14,7 +19,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="date_joined" label="日期" align="center"/>
-      <el-table-column label="操作" align="center" width="300">
+      <el-table-column label="操作" align="center" width="200" fixed="right">
         <template v-slot="{row}">
           <el-button v-if="usertype===1" type="primary" @click="showForm(row)" size="mini">编辑</el-button>
           <el-button v-if="usertype===1" type="danger" @click="deleted(row)" size="mini">删除</el-button>
@@ -22,16 +27,16 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      background
-      style="margin-top: 20px;text-align: center"
-      :current-page="pageNum"
-      :page-size="pageSize"
-      :total="total"
-      :pager-count="5"
-      :page-sizes="[5,15,30]"
-      layout="prev,pager,next,jumper,->,sizes,total"
-      @current-change="getUserList"
-      @size-change="handleSizeChange"
+        background
+        style="margin-top: 20px;text-align: center"
+        :current-page="pageNum"
+        :page-size="pageSize"
+        :total="total"
+        :pager-count="10"
+        :page-sizes="[10,15,30]"
+        layout="prev,pager,next,jumper,->,sizes,total"
+        @current-change="getUserList"
+        @size-change="handleSizeChange"
     />
 
     <el-dialog :title="form.id ? '修改用户':'新增用户'" :visible.sync="dialogFormVisible">
@@ -65,7 +70,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters} from "vuex";
+
 export default {
   name: 'user',
   computed: {
@@ -78,6 +84,7 @@ export default {
       tableData: [],
       dialogFormVisible: false,
       infoDialogVisible: false,
+      searchName: '',
       form: {
         username: '',
         usertype: '',
@@ -93,14 +100,26 @@ export default {
     }
   },
   mounted() {
-    this.getUserList()
+    this.getUserList(1)
   },
   methods: {
     async getUserList(pager = 1) {
       this.loading = true
       this.pageNum = pager
-      const {pageNum, pageSize} = this // 发送请求时候需要带参数
-      const res = await this.$API.user.reqUser(pageNum, pageSize)
+      const {pageNum, pageSize, searchName} = this // 发送请求时候需要带参数
+      const res = await this.$API.user.reqUser(pageNum, pageSize, searchName)
+      if (res.code === 200) {
+        this.tableData = res.msg
+        this.total = res.total
+        this.loading = false
+      }
+    },
+    onState() {
+      this.getUserList(1)
+    },
+    async getAll() {
+      this.loading = true
+      const res = await this.$API.user.reqUser(this.pageNum, this.pageSize, null)
       if (res.code === 200) {
         this.tableData = res.msg
         this.total = res.total
@@ -128,7 +147,7 @@ export default {
         this.$message({
           message: '添加成功!',
           type: 'success'
-        });
+        })
         await this.getUserList(this.form.id ? this.pageNum : 1)
       }
     },
@@ -141,10 +160,10 @@ export default {
         const result = await this.$API.user.delUser(row.id)
         if (result.code === 200) {
           this.$notify({
-              type: 'success',
-              message: '删除成功!'
-            },
-            await this.getUserList(this.tableData.length > 1 ? this.pageNum : this.pageNum - 1)
+                type: 'success',
+                message: '删除成功!'
+              },
+              await this.getUserList(this.tableData.length > 1 ? this.pageNum : this.pageNum - 1)
           )
         } else {
           this.$notify({
@@ -179,5 +198,19 @@ export default {
 </script>
 
 <style scoped>
+.all{
+  background-color: white;
+  box-shadow: 0 15px 30px rgba(0,0,0,.3);
+}
+.search {
+  padding: 30px;
+  padding-bottom: 10px;
+}
 
+.el-button {
+  margin-left: 10px;
+  margin-bottom: 30px;
+  border-radius: 10%;
+  margin-left: 30px;
+}
 </style>

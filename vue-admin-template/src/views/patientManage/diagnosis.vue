@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="tableData" v-loading="loading" style="width: 100%">
+    <el-table :header-cell-style="{background:'#f5f7fa',color:'#606266'}" class="all" :data="tableData" v-loading="loading" style="width: 100%">
       <el-table-column type="index" label="序号" align="center" width="70"/>
       <el-table-column prop="patientName" label="患者姓名" align="center" width="300"/>
       <el-table-column prop="doctorname" label="诊治医师" align="center" width="300"/>
@@ -13,7 +13,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="300px">
+      <el-table-column label="操作" align="center" width="300px" fixed="right">
         <template v-slot="{row}">
           <el-button type="success" v-if="!row.returntime" @click="returnbook(row)" size='mini'>完成</el-button>
           <el-button type="primary" v-if="!row.returntime" @click="generateReport(row)" size="mini">报告生成</el-button>
@@ -27,8 +27,8 @@
       :current-page="pageNum"
       :page-size="pageSize"
       :total="total"
-      :pager-count="5"
-      :page-sizes="[5,15,30]"
+      :pager-count="10"
+      :page-sizes="[10,15,30]"
       layout="prev,pager,next,jumper,->,sizes,total"
       @current-change="getPatientList"
       @size-change="handleSizeChange"
@@ -140,5 +140,8 @@ export default {
 </script>
 
 <style scoped>
-
+.all{
+  box-shadow: 0 15px 30px rgba(0,0,0,.3);
+  border-radius: 10px;
+}
 </style>

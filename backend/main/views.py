@@ -117,7 +117,8 @@ class UserManage:
         pagenum = int(request.pd.get('pageNum'))
         # 当前总条数
         pagesize = int(request.pd.get('pageSize'))
-        res = User.listUser(pagenum, pagesize)
+        searchName = str(request.pd.get('searchName'))
+        res = User.listUser(pagenum, pagesize, searchName)
         return JsonResponse(res)
 
     # 添加用户

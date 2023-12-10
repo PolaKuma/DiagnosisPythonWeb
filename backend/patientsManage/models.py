@@ -1,30 +1,17 @@
-import datetime
-import json
-import os
-import pickle
-import traceback
-import openai
-from PIL import Image
 import base64
+import datetime
 import io
-from transformers import AutoProcessor
-from transformers import AutoModelForCausalLM
-from docx.shared import Mm
-import numpy as np
+import traceback
+
 import requests
+from PIL import Image
 from django.core.paginator import Paginator, EmptyPage
 from django.db import models
 from django.db.models import Q
+from docx.shared import Mm
 from docxtpl import DocxTemplate, InlineImage
-from keras.applications.densenet import DenseNet121
-from keras.applications.densenet import preprocess_input
-from keras.layers import Dropout
-from keras.layers import Input, Dense, GlobalAveragePooling2D
-from keras.models import Model
-from keras.models import load_model
-from keras.preprocessing.sequence import pad_sequences
-from keras.regularizers import l2
-from keras.utils import load_img, img_to_array
+from transformers import AutoModelForCausalLM
+from transformers import AutoProcessor
 
 
 # 病人的类
@@ -337,7 +324,8 @@ class diagnosisPatient(models.Model):
         # 请求体
         data = {
             "model": "gpt-3.5-turbo",
-            "messages": [{"role": "user", "content": "请注意，回答请尽量简短！我的肺部x光诊断结果为" + diares + "。注意请你先以我的诊断结果（中文）为开头！我的问题是：" + input}],
+            "messages": [{"role": "user",
+                          "content": "请注意，回答请尽量简短！我的肺部x光诊断结果为" + diares + "。注意请你先以我的诊断结果（中文）为开头！我的问题是：" + input}],
             "temperature": 0.7
         }
         print("diares:", diares)
@@ -426,8 +414,10 @@ class diagnosisPatient(models.Model):
         # image = features[pic].reshape((1, 14))
         # Caption = Image_Caption(image)
         # print("Caption:", Caption)
-        processor = AutoProcessor.from_pretrained("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/saved_model")
-        model = AutoModelForCausalLM.from_pretrained("/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/saved_model")
+        processor = AutoProcessor.from_pretrained(
+            "/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/saved_model")
+        model = AutoModelForCausalLM.from_pretrained(
+            "/Users/junjie/Documents/GitHub/Untitled/backend/patientsManage/saved_model")
         img_path = '/Users/junjie/Documents/GitHub/Untitled/backend/media/' + picName
         image = Image.open(img_path)
         inputs = processor(images=image, return_tensors="pt")
@@ -436,3 +426,283 @@ class diagnosisPatient(models.Model):
         generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         print(generated_caption)
         return {'code': 200, 'msg': generated_caption}
+
+# 人员流动信息表
+class flow(models.Model):
+    # 流动id
+    id = models.BigAutoField(primary_key=True)
+    # 医生id
+    doctor_id = models.CharField(max_length=30, null=True)
+    # 医生真实姓名
+    realname = models.CharField(max_length=30, db_index=True)
+    # 入职日期
+    hiredate = models.CharField(max_length=100, null=True, blank=True)
+    # 离职日期
+    resigndate = models.CharField(max_length=200)
+    # 离职原因
+    reason = models.TextField(null=True)
+
+    class Meta:
+        db_table = "flow"
+
+    # 查询人员流动
+    @staticmethod
+    def doctorFlow(doctorID, pagenum, pageSize):
+        try:
+            if doctorID != "None":
+                # 如果传入了医生id，则按照医生id查询
+                qs = flow.objects.filter(doctor_id=doctorID).values().order_by('resigndate')
+            else:
+                qs = flow.objects.values().order_by('resigndate')
+
+            # 使用分页对象，设定每页多少条记录
+            pgnt = Paginator(qs, pageSize)
+            # 从数据库中读取数据，指定读取其中第几页
+            page = pgnt.page(pagenum)
+            # 将 QuerySet 对象 转化为 list 类型
+            retlist = list(page)
+
+            return {'code': 200, 'msg': retlist, 'total': pgnt.count}
+        except EmptyPage:
+            return {'code': 200, 'msg': [], 'total': 0}
+        except:
+            return {'code': 500, 'msg': f'未知错误\n{traceback.format_exc()}'}
+
+    # 添加一条记录
+    @staticmethod
+    def addFlow(data):
+        current_time = datetime.datetime.now().strftime('%Y{y}%m{m}%d{d} %H{h}%M{f}%S{s}').format(y='年', m='月',
+                                                                                                  d='日', h='时',
+                                                                                                  f='分', s='秒')
+        try:
+            # 将data中的信息解析出来然后去create新建
+            flow_record = flow.objects.create(
+                doctor_id=data['doctor_id'],
+                realname=data['realname'],
+                hiredate=data['hiredate'],
+                resigndate=current_time,
+                reason=data['reason']
+            )
+            return {'code': 200, 'msg': flow_record.id}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
+    # 删除一条记录
+    @staticmethod
+    def deleteFlow(data):
+        try:
+            # 查找这个记录信息
+            flow_record = flow.objects.filter(id=data)
+
+            if flow_record:
+                flow_record.delete()
+                return {'code': 200, 'msg': "删除成功"}
+            else:
+                return {'code': 500, 'msg': f'id为 {data} 的人员流动记录不存在'}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
+    # 投诉记录
+
+
+class complaint(models.Model):
+    # 投诉id
+    id = models.BigAutoField(primary_key=True)
+    # 患者id
+    patient_id = models.CharField(max_length=30, null=True)
+    # 患者姓名
+    patient_name = models.CharField(max_length=255, null=False)
+    # 投诉日期
+    complaint_date = models.CharField(max_length=100, null=True, blank=True)
+    # 投诉内容
+    contents = models.TextField(null=True)
+    # 医生回复
+    reply = models.TextField(null=True)
+    # 处理结果
+    results = models.TextField(null=True)
+
+    class Meta:
+        db_table = "complaint"
+
+        # 查询人员流动
+    @staticmethod
+    def Complaint(patientID, pagenum, pageSize):
+        try:
+            if patientID != "None":
+                # 如果传入了患者id，则按照患者id查询
+                qs = complaint.objects.filter(patient_id=patientID).values().order_by('complaint_date')
+            else:
+                qs = complaint.objects.values().order_by('complaint_date')
+
+            # 使用分页对象，设定每页多少条记录
+            pgnt = Paginator(qs, pageSize)
+            # 从数据库中读取数据，指定读取其中第几页
+            page = pgnt.page(pagenum)
+            # 将 QuerySet 对象 转化为 list 类型
+            retlist = list(page)
+
+            return {'code': 200, 'msg': retlist, 'total': pgnt.count}
+        except EmptyPage:
+            return {'code': 200, 'msg': [], 'total': 0}
+        except:
+            return {'code': 500, 'msg': f'未知错误\n{traceback.format_exc()}'}
+
+    # 添加投诉
+    @staticmethod
+    def addComplait(data):
+        current_time = datetime.datetime.now().strftime('%Y{y}%m{m}%d{d} %H{h}%M{f}%S{s}').format(y='年', m='月',
+                                                                                                  d='日', h='时',
+                                                                                                  f='分', s='秒')
+        try:
+            complaint_record = complaint.objects.create(
+                patient_id=data['patient_id'],
+                patient_name=data['patient_name'],
+                complaint_date=current_time,
+                contents=data['contents']
+            )
+            return {'code': 200, 'msg': complaint_record.id}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
+    # 删除投诉
+    @staticmethod
+    def deleteComplait(data):
+        try:
+            complaint_record = complaint.objects.filter(id=data)
+            if complaint_record:
+                complaint_record.delete()
+                return {'code': 200, 'msg': "删除成功"}
+            else:
+                return {'code': 500, 'msg': f'id为 {data} 的投诉不存在'}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
+    # 更新投诉记录（医生回复、管理员处理结果）
+    @staticmethod
+    def updateComplait(complaintID, newdata):
+        try:
+            complaint_record = complaint.objects.get(id=complaintID)
+            complaint_record.reply = newdata['reply']
+            complaint_record.results = newdata['results']
+            complaint_record.save()
+
+            return {'code': 200, 'msg': f'id为{complaint_record.id}的投诉更新成功'}
+
+        except complaint.DoesNotExist:
+            return {'code': 500, 'msg': f'id为 {complaintID} 的投诉不存在'}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
+    # 值班安排的类
+
+
+class duty(models.Model):
+    # 值班安排id
+    id = models.BigAutoField(primary_key=True)
+    # 值班日期
+    date = models.CharField(max_length=100, null=True, blank=True)
+    # 值班时段
+    arrange = models.CharField(max_length=255)
+    # 医生id
+    doctor_id = models.CharField(max_length=30, null=True)
+    # 姓名
+    realname = models.CharField(max_length=30, db_index=True)
+    # 性别
+    gender = models.CharField(max_length=30)
+    # 电话
+    telephone = models.CharField(max_length=30)
+    # 出勤记录
+    attendance = models.CharField(max_length=30)  # 设置默认取值
+    # 负责人
+    response = models.CharField(max_length=30)
+
+    class Meta:
+        db_table = "duty"
+
+    # 分页查询
+    @staticmethod
+    def doctorDuty(realname, pagenum, pageSize):
+        try:
+            if realname != "None":
+                qs = duty.objects.filter(realname__icontains=realname).values().order_by('-id')
+            else:
+                qs = duty.objects.values().order_by('-id')
+
+            # 使用分页对象，设定每页多少条记录
+            pgnt = Paginator(qs, pageSize)
+
+            # 从数据库中读取数据，指定读取其中第几页
+            page = pgnt.page(pagenum)
+            # 将 QuerySet 对象 转化为 list 类型
+            retlist = list(page)
+
+            # total指定了 一共有多少数据
+            return {'code': 200, 'msg': retlist, 'total': pgnt.count}
+        except EmptyPage:
+            return {'code': 200, 'msg': [], 'total': 0}
+        except:
+            return {'code': 500, 'msg': f'未知错误\n{traceback.format_exc()}'}
+
+    # 添加排班
+    @staticmethod
+    def addDuty(data):
+        try:
+            oneduty = duty.objects.create(
+                date=data['date'],
+                arrange=data['arrange'],
+                doctor_id=data['doctor_id'],
+                realname=data['realname'],
+                gender=data['gender'],
+                telephone=data['telephone'],
+                attendance=data['attendance'],
+                response=data['response']
+            )
+            return {'code': 200, 'msg': oneduty.id}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
+    # 删除一个
+    @staticmethod
+    def deleteDuty(data):
+        try:
+            oneduty = duty.objects.filter(id=data)
+            if oneduty:
+                oneduty.delete()
+                return {'code': 200, 'msg': "删除成功"}
+            else:
+                return {'code': 500, 'msg': f'id为 {data} 的班次不存在'}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
+    # 删除全部
+    @staticmethod
+    def deleteAllDuties():
+        try:
+            duty.objects.all().delete()
+            return {'code': 200, 'msg': "删除全部成功"}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}
+
+    # 更新班次
+    @staticmethod
+    def updateDuty(dutyID, newdata):
+        try:
+            oneduty = duty.objects.get(id=dutyID)
+            # 遍历字典，将这个新的newdata赋值给oneduty
+            for field, value in newdata.items():
+                setattr(oneduty, field, value)
+            oneduty.save()
+            return {'code': 200, 'msg': '值班安排更新成功'}
+        except duty.DoesNotExist:
+            return {'code': 500, 'msg': f'id为 {dutyID} 的值班安排不存在'}
+        except:
+            err = traceback.format_exc()
+            return {'code': 500, 'msg': err}

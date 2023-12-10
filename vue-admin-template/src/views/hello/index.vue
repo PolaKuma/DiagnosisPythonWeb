@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="allback">
     <div class="container">
       <div class="nav-item">
         <img src="@/image/logo.png">
@@ -57,7 +57,7 @@
     <div class="banner">
       <div class="button-container">
         <div class="button">
-          <router-link to='/dashboard'>
+          <router-link to='/homeIndex'>
             <img src="@/image/doctor.png" alt="Icon 1">
             <div class="button-text">
               <div class="title">患者管理系统</div>
@@ -708,5 +708,8 @@ body {
   100% {
     transform: translate(0);
   }
+}
+.allback{
+  background-color: white !important;
 }
 </style>

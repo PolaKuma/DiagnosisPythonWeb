@@ -3,8 +3,7 @@ import time
 import jwt
 import xlrd2
 from django.http import JsonResponse
-
-from .models import Patient, diagnosisPatient
+from .models import Patient, diagnosisPatient, flow, complaint, duty
 
 
 class PatientsManage:
@@ -205,4 +204,171 @@ class DiagnosisManage:
         id = request.pd.get('data')
         res = diagnosisPatient.returndiagnosis(id)
 
+        return JsonResponse(res)
+
+
+# 人员流动的类
+class flowManage:
+
+    def handle(self, request):
+        # 判断是否为GET请求
+        if request.method == 'GET':
+            pd = request.GET
+        else:
+            pd = json.loads(request.body)
+
+        request.pd = pd
+        action = pd.get('action')
+
+        if action == 'doctorFlows':
+            return self.listFlows(request)
+        elif action == 'addFlows':
+            return self.addFlow(request)
+        elif action == 'deleteFlows':
+            return self.deleteFlow(request)
+        else:
+            return JsonResponse({'code': 500, 'msg': 'action参数错误'})
+
+    # 获取医生流动信息
+    def listFlows(self, request):
+        # 当前第几页
+        pagenum = int(request.pd.get('pageNum'))
+        # 这一页一共要多少行
+        pagesize = int(request.pd.get('pageSize'))
+        searchID = str(request.pd.get('searchID'))
+        res = flow.doctorFlow(searchID, pagenum, pagesize)
+
+        return JsonResponse(res)
+
+    # 添加记录
+    def addFlow(self, request):
+        data = request.pd.get('data')
+        res = flow.addFlow(data)
+        return JsonResponse(res)
+
+    # 删除记录
+    def deleteFlow(self, request):
+        data = request.pd.get('data')
+        data = data['id']
+        res = flow.deleteFlow(data)
+        return JsonResponse(res)
+
+
+# 投诉记录的类
+class complaintManage:
+
+    def handle(self, request):
+        # 判断是否为GET请求
+        if request.method == 'GET':
+            pd = request.GET
+        else:
+            pd = json.loads(request.body)
+
+        request.pd = pd
+        action = pd.get('action')
+
+        if action == 'addComplaints':
+            return self.addComplaint(request)
+        elif action == 'listComplaints':
+            return self.listComplaints(request)
+        elif action == 'deleteComplaints':
+            return self.deleteComplaint(request)
+        elif action == 'updateComplaints':
+            return self.updateComplaint(request)
+        else:
+            return JsonResponse({'code': 500, 'msg': 'action参数错误'})
+
+    def listComplaints(self, request):
+        # 当前第几页
+        pagenum = int(request.pd.get('pageNum'))
+        # 这一页一共要多少行
+        pagesize = int(request.pd.get('pageSize'))
+        searchName = str(request.pd.get('searchName'))
+        res = complaint.Complaint(searchName, pagenum, pagesize)
+        return JsonResponse(res)
+
+    # 添加
+    def addComplaint(self, request):
+        data = request.pd.get('data')
+        res = complaint.addComplait(data)
+        return JsonResponse(res)
+
+    # 删除
+    def deleteComplaint(self, request):
+        data = request.pd.get('data')
+        data = data['id']
+        res = complaint.deleteComplait(data)
+        return JsonResponse(res)
+
+    # 更新
+    def updateComplaint(self, request):
+        # 获取newdata中的数据
+        newdata = request.pd.get('newdata')
+        # 从newdata中获取id
+        complaintID = newdata['id']
+        res = complaint.updateComplait(complaintID, newdata)
+        return JsonResponse(res)
+
+
+# 值班安排
+class dutyManage:
+
+    def handle(self, request):
+        # 判断是否为GET请求
+        if request.method == 'GET':
+            pd = request.GET
+        else:
+            pd = json.loads(request.body)
+
+        request.pd = pd
+        action = pd.get('action')
+
+        if action == 'listDuties':
+            return self.listDuties(request)
+        elif action == 'addDuty':
+            return self.addDuty(request)
+        elif action == 'deleteDuty':
+            return self.deleteOneDuty(request)
+        elif action == 'deleteAll':
+            return self.deleteAll(request)
+        elif action == 'updateDuty':
+            return self.updateDuty(request)
+        else:
+            return JsonResponse({'code': 500, 'msg': 'action参数错误'})
+
+    # 查询排班记录
+    def listDuties(self, request):
+        # 当前第几页
+        pagenum = int(request.pd.get('pageNum'))
+        # 这一页一共要多少行
+        pagesize = int(request.pd.get('pageSize'))
+        searchName = str(request.pd.get('searchName'))
+        res = duty.doctorDuty(searchName, pagenum, pagesize)
+        return JsonResponse(res)
+
+    # 添加
+    def addDuty(self, request):
+        data = request.pd.get('data')
+        res = duty.addDuty(data)
+        return JsonResponse(res)
+
+    # 删除一个
+    def deleteOneDuty(self, request):
+        data = request.pd.get('data')
+        data = data['id']
+        res = duty.deleteDuty(data)
+        return JsonResponse(res)
+
+    # 删除全部
+    def deleteAll(self, request):
+        res = duty.deleteAllDuties()
+        return JsonResponse(res)
+
+    # 更新
+    def updateDuty(self, request):
+        # 获取newdata中的数据
+        newdata = request.pd.get('newdata')
+        # 从newdata中获取id
+        dutyID = newdata['id']
+        res = duty.updateDuty(dutyID, newdata)
         return JsonResponse(res)
