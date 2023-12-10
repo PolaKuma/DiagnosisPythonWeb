@@ -91,7 +91,8 @@ export default {
     async generateReport(row) {
       const patientid = row.patientid
       const diagnosisTime = row.diagnosisTime
-      const targetPath = `http://localhost:1024/chatHome#/chatHome?patientid=${patientid}&diagnosisTime=${diagnosisTime}`
+      const host = window.location.origin
+      const targetPath = `${host}/chatHome#/chatHome?patientid=${patientid}&diagnosisTime=${diagnosisTime}`
       window.open(targetPath, '_blank')
     },
     showForm(row) {
