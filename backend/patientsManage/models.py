@@ -526,6 +526,29 @@ class complaint(models.Model):
     class Meta:
         db_table = "complaint"
 
+        # 查询人员流动
+    @staticmethod
+    def Complaint(patientID, pagenum, pageSize):
+        try:
+            if patientID != "None":
+                # 如果传入了患者id，则按照患者id查询
+                qs = complaint.objects.filter(patient_id=patientID).values().order_by('complaint_date')
+            else:
+                qs = complaint.objects.values().order_by('complaint_date')
+
+            # 使用分页对象，设定每页多少条记录
+            pgnt = Paginator(qs, pageSize)
+            # 从数据库中读取数据，指定读取其中第几页
+            page = pgnt.page(pagenum)
+            # 将 QuerySet 对象 转化为 list 类型
+            retlist = list(page)
+
+            return {'code': 200, 'msg': retlist, 'total': pgnt.count}
+        except EmptyPage:
+            return {'code': 200, 'msg': [], 'total': 0}
+        except:
+            return {'code': 500, 'msg': f'未知错误\n{traceback.format_exc()}'}
+
     # 添加投诉
     @staticmethod
     def addComplait(data):

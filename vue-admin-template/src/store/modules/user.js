@@ -7,7 +7,7 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
-    usertype: '',
+    usertype: ''
   }
 }
 
@@ -28,6 +28,9 @@ const mutations = {
   },
   SET_USERTYPE: (state, usertype) => {
     state.usertype = usertype
+  },
+  SET_LAST_LOGIN: (state, lastLogin) => {
+    state.lastLogin = lastLogin
   }
 }
 

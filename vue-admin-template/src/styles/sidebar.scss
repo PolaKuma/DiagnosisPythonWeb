@@ -172,6 +172,7 @@
         }
       }
     }
+
   }
 
   .el-menu--collapse .el-menu .el-submenu {
@@ -225,6 +226,9 @@
     &:hover {
       // you can use $subMenuHover
       background-color: $menuHover !important;
+      color: white !important;
+      border-radius: 20px !important;
+      transform: scale(0.9) !important; // 调整缩小比例
     }
   }
 

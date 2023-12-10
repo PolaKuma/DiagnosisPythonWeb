@@ -147,7 +147,7 @@ export default {
         this.$message({
           message: '添加成功!',
           type: 'success'
-        });
+        })
         await this.getUserList(this.form.id ? this.pageNum : 1)
       }
     },

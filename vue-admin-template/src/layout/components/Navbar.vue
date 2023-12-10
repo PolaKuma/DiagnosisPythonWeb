@@ -7,7 +7,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="./ava.jpeg" class="user-avatar">
+          <img v-if="usertype === 2" src="./ava.jpeg" class="user-avatar">
+          <img v-else src="./head_portrait1.jpg" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -105,7 +106,7 @@
             </el-form-item>
           </div>
           <span style="margin-bottom:20px;">
-          本人自愿与安逸医院解除劳动关系，自签字之日起任何行为与安逸医院无关，并自我承当责任。
+          本人自愿与波乐医院解除劳动关系，自签字之日起任何行为与安逸医院无关，并自我承当责任。
         </span>
 
           <!-- 审批情况 -->
@@ -145,7 +146,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'name'
+      'name',
+      'usertype'
     ])
   },
   data() {

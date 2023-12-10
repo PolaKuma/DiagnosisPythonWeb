@@ -269,12 +269,23 @@ class complaintManage:
 
         if action == 'addComplaints':
             return self.addComplaint(request)
+        elif action == 'listComplaints':
+            return self.listComplaints(request)
         elif action == 'deleteComplaints':
             return self.deleteComplaint(request)
         elif action == 'updateComplaints':
             return self.updateComplaint(request)
         else:
             return JsonResponse({'code': 500, 'msg': 'action参数错误'})
+
+    def listComplaints(self, request):
+        # 当前第几页
+        pagenum = int(request.pd.get('pageNum'))
+        # 这一页一共要多少行
+        pagesize = int(request.pd.get('pageSize'))
+        searchName = str(request.pd.get('searchName'))
+        res = complaint.Complaint(searchName, pagenum, pagesize)
+        return JsonResponse(res)
 
     # 添加
     def addComplaint(self, request):

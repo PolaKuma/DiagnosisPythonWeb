@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="allback">
     <div class="container">
       <div class="nav-item">
         <img src="@/image/logo.png">
@@ -708,5 +708,8 @@ body {
   100% {
     transform: translate(0);
   }
+}
+.allback{
+  background-color: white !important;
 }
 </style>

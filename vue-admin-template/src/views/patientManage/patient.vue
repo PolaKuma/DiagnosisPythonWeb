@@ -150,7 +150,7 @@ export default {
     async getPatientList(pager = 1) {
       this.loading = true
       this.pageNum = pager
-      const {pageNum, pageSize} = this // 发送请求时候需要带参数
+      const { pageNum, pageSize } = this // 发送请求时候需要带参数
       const res = await this.$API.patient.reqPatients(pageNum, pageSize, this.key, this.value)
       if (res.code === 200) {
         this.tableData = res.msg
@@ -219,7 +219,6 @@ export default {
     onState() {
       this.getPatientList(1)
     },
-
     handleSizeChange(limit) {
       this.pageSize = limit
       this.getUserList()

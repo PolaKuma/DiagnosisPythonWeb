@@ -99,6 +99,7 @@ input {
 	margin: auto;
   margin-top: 5vmax;
 	margin-left: 15vmax;
+  line-height: 5vmax;
 	margin-right:15vmax;
 	text-align: center;
 	font-weight: bold;

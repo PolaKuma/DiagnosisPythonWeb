@@ -56,7 +56,7 @@
                     </p>
                     <p>
                       <span>{{ item.text }}</span>
-                      <span class="colorYellow">(件)</span>
+                      <span class="colorYellow">(位)</span>
                     </p>
                   </div>
                 </dv-border-box-12>
@@ -96,7 +96,7 @@
               <div class="right_box1">
                 <dv-border-box-12>
                   <dv-decoration-7 style="width: 100%; height: 30px"
-                  >诊 断 数 排 行 榜
+                  >医 疗 货 物 补 给
                   </dv-decoration-7
                   >
                   <dv-scroll-ranking-board
@@ -183,26 +183,26 @@ export default {
       numberData: [
         {
           number: {
-            number: 15,
+            number: 1185,
           },
-          text: "今日构建总量",
+          text: "今日就诊人数总量",
         },
         {
           number: {
-            number: 1144,
+            number: 382,
           },
-          text: "总共完成数量",
+          text: "目前院内人数",
         },
         {
           number: {
-            number: 361,
+            number: 172,
           },
-          text: "正在编译数量",
+          text: "排队人数",
         },
       ],
       //左侧轮播表格配置项
       board_info: {
-        header: ["人员", "月产量", "月合格率"],
+        header: ["人员", "月就诊人数", "患者满意度"],
         data: [
           ["张三", "10830", "90%"],
           ["张四", "13500", "92%"],
@@ -754,7 +754,7 @@ export default {
           },
         },
         legend: {
-          data: ["已贯通", "计划贯通", "贯通率"],
+          data: ["阳性", "阴性", "比例"],
           textStyle: {
             color: "#B4B4B4",
           },

@@ -24,8 +24,8 @@ export default {
   },
   data() {
     return {
-      title: '医院管理系统',
-      logo: 'https://img.zcool.cn/community/0162135cf483cea801205e4bc90663.png@1280w_1l_2o_100sh.png'
+      title: 'Pola诊断管理系统',
+      logo: 'https://chat.furrybar.com/assets/assets/furry_ui/Login_icon1.png'
     }
   }
 }

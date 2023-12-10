@@ -15,7 +15,13 @@ export const findFlow = (pageNum, pageSize, searchID) => request({
 export const delFlow = (ID) => request({
   url: `api/flows`,
   method: 'post',
-  data: { 'action': 'addFlows', 'data': { 'id': ID }}
+  data: { 'action': 'deleteFlows', 'data': { 'id': ID }}
+})
+
+export const findCompaints = (pageNum, pageSize, searchID) => request({
+  url: `api/complaints`,
+  method: 'post',
+  data: { 'action': 'listComplaints', 'pageNum': pageNum, 'pageSize': pageSize, 'searchID': searchID }
 })
 
 export const addCompaints = (data) => request({
@@ -27,11 +33,11 @@ export const addCompaints = (data) => request({
 export const updateCompaints = (data) => request({
   url: `api/complaints`,
   method: 'post',
-  data: { 'action': 'updateComplaints', 'data': data }
+  data: { 'action': 'updateComplaints', 'newdata': data }
 })
 
 export const delCompaints = (ID) => request({
-  url: `api/flows`,
+  url: `api/complaints`,
   method: 'post',
   data: { 'action': 'deleteComplaints', 'data': { 'id': ID }}
 })
