@@ -54,8 +54,8 @@
           <el-card shadow='hover' v-for="item in countData" :key="item.name" :body-style="{ display: 'flex',padding: 0 }" class="OrderCard">
             <i class="icon" :class="'el-icon-'+item.icon" :style="{ background: item.color}"></i>
             <div>
-              <p class="important-font" style="margin-top: 10px !important;" id="numa">{{ item.value }}</p>
-              <p class="secondary-font" style="margin-top: 10px !important;" id="numb">{{ item.name }}</p>
+              <p class="important-font" style="margin-top: 25px !important;" id="numa">{{ item.value }}</p>
+              <p class="secondary-font" style="margin-top: 20px !important;" id="numb">{{ item.name }}</p>
             </div>
           </el-card>
         </div>
