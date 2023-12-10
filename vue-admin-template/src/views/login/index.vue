@@ -3,7 +3,8 @@
     <el-form ref="loginForm" :model="loginForm" v-if="loginOrRegister" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">注册</h3>
+        <img src="./favicon.png" style="display:block; margin: 0 auto; width:40px;height:40px">
+        <h3 style="margin-top: 10px" class="title">注册</h3>
       </div>
       <el-form-item prop="doctorno">
         <span class="svg-container">
@@ -62,7 +63,8 @@
     <el-form ref="loginForm" v-else :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">登录</h3>
+        <img src="./favicon.png" style="display:block; margin: 0 auto; width:40px;height:40px">
+        <h3 style="margin-top: 10px" class="title">登录</h3>
       </div>
       <el-form-item prop="username">
         <span class="svg-container">
