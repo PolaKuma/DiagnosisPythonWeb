@@ -64,7 +64,7 @@ export default {
       tableData: [],
       loading: false,
       pageNum: 1,
-      pageSize: 5,
+      pageSize: 10,
       total: 0
     }
   },
@@ -75,10 +75,9 @@ export default {
     async getPatientList(pager = 1) {
       this.loading = true
       this.pageNum = pager
-      const {pageNum, pageSize} = this // 发送请求时候需要带参数
+      const { pageNum, pageSize } = this // 发送请求时候需要带参数
       const res = await this.$API.patient.reqDiagnosis(pageNum, pageSize)
       if (res.code === 200) {
-        console.log(res.msg)
         this.tableData = res.msg
         this.total = res.total
         this.loading = false
@@ -91,7 +90,8 @@ export default {
     async generateReport(row) {
       const patientid = row.patientid
       const diagnosisTime = row.diagnosisTime
-      const targetPath = `http://localhost:1024/chatHome#/chatHome?patientid=${patientid}&diagnosisTime=${diagnosisTime}`
+      const host = window.location.origin
+      const targetPath = `${host}/chatHome#/chatHome?patientid=${patientid}&diagnosisTime=${diagnosisTime}`
       window.open(targetPath, '_blank')
     },
     showForm(row) {
@@ -118,13 +118,10 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
+      }).then(async() => {
         const result = await this.$API.patient.returnPatient(row.diagnosisTime)
         if (result.code === 200) {
-          this.$notify({
-              type: 'success',
-              message: row.patientName + ' 诊断完成'
-            },
+          this.$notify({ type: 'success', message: row.patientName + ' 诊断完成' },
           )
           await this.getPatientList(this.pageNum)
         }

@@ -207,7 +207,7 @@ class diagnosisPatient(models.Model):
     @staticmethod
     def diagnosispatient(pagenum, pagesize, username):
         try:
-            # 要获取的第几页 rf 下所有的借阅信息读取出来 找到后按照时间正序排列
+            # 要获取的第几页 rf 下所有的诊断信息读取出来 找到后按照时间正序排列
             qs = diagnosisPatient.objects.filter(doctorname=username).values().order_by('returntime')
             # 使用分页对象，设定每页多少条记录
             pgnt = Paginator(qs, pagesize)
@@ -223,6 +223,28 @@ class diagnosisPatient(models.Model):
             return {'code': 200, 'msg': [], 'total': 0}
         except:
             return {'code': 500, 'msg': f'未知错误\n {traceback.format_exc()} '}
+
+    @staticmethod
+    def reqDiagnosis(patientID, pagenum, pageSize):
+        try:
+            if patientID != "None":
+                # 如果传入了患者id，则按照患者id查询
+                qs = diagnosisPatient.objects.filter(patientid=patientID).values().order_by('returntime')
+            else:
+                qs = diagnosisPatient.objects.values().order_by('returntime')
+
+            # 使用分页对象，设定每页多少条记录
+            pgnt = Paginator(qs, pageSize)
+            # 从数据库中读取数据，指定读取其中第几页
+            page = pgnt.page(pagenum)
+            # 将 QuerySet 对象 转化为 list 类型
+            retlist = list(page)
+
+            return {'code': 200, 'msg': retlist, 'total': pgnt.count}
+        except EmptyPage:
+            return {'code': 200, 'msg': [], 'total': 0}
+        except:
+            return {'code': 500, 'msg': f'未知错误\n{traceback.format_exc()}'}
 
     @staticmethod
     def addDiagnosisPatient(data, realname):
@@ -250,7 +272,7 @@ class diagnosisPatient(models.Model):
                                                                                                   f='分', s='秒')
         try:
             patient = diagnosisPatient.objects.get(diagnosisTime=id)
-            # 如果借阅信息不存在则报错500
+            # 如果诊断信息不存在则报错500
         except diagnosisPatient.DoesNotExist:
             return {
                 'ret': 500,
