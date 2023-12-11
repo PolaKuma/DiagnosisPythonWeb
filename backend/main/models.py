@@ -14,7 +14,6 @@ from django.core import serializers
 # 可以通过 命令 python  manage.py createsuperuser 来创建超级管理员
 # 就是在这User表中添加记录
 
-
 class User(AbstractUser):
     id = models.BigAutoField(primary_key=True)
 

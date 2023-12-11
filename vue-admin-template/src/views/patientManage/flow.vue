@@ -12,20 +12,8 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="姓名">
-              <span>{{ props.row.name }}</span>
-            </el-form-item>
-            <el-form-item label="性别">
-              <span>{{ props.row.sex }}</span>
-            </el-form-item>
-            <el-form-item label="学历">
-              <span>{{ props.row.degree }}</span>
-            </el-form-item>
-            <el-form-item label="专业">
-              <span>{{ props.row.major }}</span>
-            </el-form-item>
-            <el-form-item label="职称">
-              <span>{{ props.row.profession }}</span>
+            <el-form-item label="离职原因">
+              <span>{{ props.row.reason }}</span>
             </el-form-item>
           </el-form>
         </template>
@@ -34,7 +22,6 @@
       <el-table-column label="医生姓名" prop="realname"></el-table-column>
       <el-table-column label="入职日期" prop="hiredate"></el-table-column>
       <el-table-column label="离职日期" prop="resigndate"></el-table-column>
-      <el-table-column label="离职原因" prop="reason"></el-table-column>
       <el-table-column label="操作" align="center" width="300">
         <template v-slot="{row}">
           <el-button type="danger" size="mini" @click="handleDelete(row)">删除</el-button>

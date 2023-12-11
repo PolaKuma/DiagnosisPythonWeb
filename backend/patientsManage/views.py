@@ -136,6 +136,8 @@ class DiagnosisManage:
 
         if action == 'readlist':
             return self.readlist(request)
+        elif action == 'reqDiagnosis':
+            return self.reqDiagnosis(request)
         elif action == 'readPatient':
             return self.readPatient(request)
         elif action == 'returnPatient':
@@ -178,7 +180,7 @@ class DiagnosisManage:
     def readlist(self, request):
         pagenum = int(request.pd.get('pageNum'))
         pagesize = int(request.pd.get('pageSize'))
-        # 逻辑是 当前账号下的所有的借阅信息
+        # 逻辑是 当前账号下的所有的诊断信息
         token = request.COOKIES.get('vue_admin_template_token')
 
         # 解密token
@@ -187,6 +189,15 @@ class DiagnosisManage:
             res = diagnosisPatient.diagnosispatient(pagenum, pagesize, username['username'])
             return JsonResponse(res)
         return JsonResponse({'code': 500, 'msg': '会话过期了'})
+
+    def reqDiagnosis(self, request):
+        # 当前第几页
+        pagenum = int(request.pd.get('pageNum'))
+        # 这一页一共要多少行
+        pagesize = int(request.pd.get('pageSize'))
+        patientID = str(request.pd.get('patientID'))
+        res = diagnosisPatient.reqDiagnosis(patientID, pagenum, pagesize)
+        return JsonResponse(res)
 
     # 诊断病人
     def readPatient(self, request):
@@ -203,7 +214,6 @@ class DiagnosisManage:
     def returnPatient(self, request):
         id = request.pd.get('data')
         res = diagnosisPatient.returndiagnosis(id)
-
         return JsonResponse(res)
 
 

@@ -19,7 +19,8 @@
       <el-tab-pane label="患者留言" name="first">
         <template>
           <el-button v-if="usertype===1" type="primary" @click="addComplaintFormVisible = true">新增投诉</el-button>
-          <el-table :header-cell-style="{background:'#f5f7fa',color:'#606266'}" :data="complaintPatientList" height="600" border style="width: auto">
+          <el-table :header-cell-style="{background:'#f5f7fa',color:'#606266'}" :data="complaintPatientList"
+                    height="600" border style="width: auto">
             <el-table-column type="expand">
               <template scope="props">
                 <el-form :model="props.row">
@@ -47,6 +48,7 @@
             <el-table-column label="操作">
               <template v-slot="{row}">
                 <el-button type="primary" size="mini" @click="showForm(row)">回复</el-button>
+                <el-button type="info" size="mini" @click="showPatient(row)">查看</el-button>
                 <el-button size="small" type="danger" @click="deletePatient(row)">删除
                 </el-button>
               </template>
@@ -100,6 +102,15 @@
               <el-button type="primary" @click="handleAddComplaint">确定</el-button>
             </div>
           </el-dialog>
+          <el-dialog :title="'患者信息'" :visible.sync="showAttributesDialogVisible">
+            <el-table :data="[patient_p_info]">
+              <el-table-column prop="id" label="病例号"></el-table-column>
+              <el-table-column prop="patientName" label="患者名字"></el-table-column>
+              <el-table-column prop="doctorname" label="诊治医师"></el-table-column>
+              <el-table-column prop="diagnosisTime" label="诊断时间"></el-table-column>
+              <el-table-column prop="returntime" label="完成时间"></el-table-column>
+            </el-table>
+          </el-dialog>
         </template>
       </el-tab-pane>
     </el-tabs>
@@ -117,6 +128,7 @@ export default {
   },
   data() {
     return {
+      showAttributesDialogVisible: false,
       addComplaintFormVisible: false,
       pageNum: 1,
       pageSize: 10,
@@ -128,6 +140,8 @@ export default {
       loading: false,
       patientList: [],
       form: {},
+      patient_p_info: {},
+      patient_info: [],
       newComplaintForm: {
         patient_id: '',
         patient_name: '',
@@ -153,7 +167,7 @@ export default {
     async getCompaintsList(pager = 1) {
       this.loading = true
       this.pageNum = pager
-      const {pageNum, pageSize} = this
+      const { pageNum, pageSize } = this
       var search = this.searchName
       if (search === '') {
         search = 'None'
@@ -183,6 +197,13 @@ export default {
         }, await this.getCompaintsList(this.form.id ? this.pageNum : 1))
       }
     },
+    async showPatient(row) {
+      const res = await this.$API.patient.reqPDiagnosis(1, 10, row.patient_id)
+      this.patient_info = res.msg
+      this.patient_p_info = this.patient_info[0]
+      console.log(this.patient_info)
+      this.showAttributesDialogVisible = true
+    },
     async handleAddComplaint() {
       const res = await this.$API.flow.addCompaints(this.newComplaintForm)
       if (res.code === 200) {
@@ -204,10 +225,7 @@ export default {
         const result = await this.$API.flow.delCompaints(row.id)
         console.log(result)
         if (result.code === 200) {
-          this.$notify({
-              type: 'success',
-              message: '删除成功!'
-            }, await this.getCompaintsList(this.complaintPatientList.length > 1 ? this.pageNum : this.pageNum - 1)
+          this.$notify({ type: 'success', message: '删除成功!' }, await this.getCompaintsList(this.complaintPatientList.length > 1 ? this.pageNum : this.pageNum - 1)
           )
         } else {
           this.$notify({

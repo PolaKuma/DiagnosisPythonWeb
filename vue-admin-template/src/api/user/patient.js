@@ -24,7 +24,13 @@ export const delPatients = (id) => request({url: `api/patients`, method: 'delete
 export const reqDiagnosis = (pageNum, pageSize) => request({
   url: `api/diagnosis`,
   method: 'post',
-  data: {'action': 'readlist', 'pageNum': pageNum, 'pageSize': pageSize}
+  data: { 'action': 'readlist', 'pageNum': pageNum, 'pageSize': pageSize }
+})
+
+export const reqPDiagnosis = (pageNum, pageSize, patientID) => request({
+  url: `api/diagnosis`,
+  method: 'post',
+  data: { 'action': 'reqDiagnosis', 'pageNum': pageNum, 'pageSize': pageSize, 'patientID': patientID }
 })
 
 export const diagnosisPatient = (data) => request({url: `api/diagnosis`, method: 'post', data: {'action': 'readPatient', 'data': data}})
