@@ -8,7 +8,7 @@
             <div class="userCard">
               <el-avatar :size="150" :src="getAvatarUrl"></el-avatar>
               <div class="userInfo">
-                <p class="important-font">{{ name }}</p>
+                <p class="important-font" style="font-size:20px !important;">{{ name }}</p>
                 <p class="secondary-font">欢迎你！</p>
               </div>
             </div>
@@ -55,7 +55,7 @@
             <i class="icon" :class="'el-icon-'+item.icon" :style="{ background: item.color}"></i>
             <div>
               <p class="important-font" style="margin-top: 2vmin !important;" id="numa">{{ item.value }}</p>
-              <p class="secondary-font" style="margin-top: 1vmin !important;" id="numb">{{ item.name }}</p>
+              <p class="secondary-font" style="margin-top: 2vmin !important;" id="numb">{{ item.name }}</p>
             </div>
           </el-card>
         </div>

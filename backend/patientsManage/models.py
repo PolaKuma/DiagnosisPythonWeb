@@ -347,7 +347,7 @@ class diagnosisPatient(models.Model):
         data = {
             "model": "gpt-3.5-turbo",
             "messages": [{"role": "user",
-                          "content": "请注意，回答请尽量简短！我的肺部x光诊断结果为" + diares + "。注意请你先以我的诊断结果（中文）为开头！我的问题是：" + input}],
+                          "content": "请注意，你的身份是一位肺部诊断科X光医生。我的肺部x光诊断结果为" + diares + "。注意请你先以我的诊断结果（中文）为开头！我的问题是：" + input}],
             "temperature": 0.7
         }
         print("diares:", diares)

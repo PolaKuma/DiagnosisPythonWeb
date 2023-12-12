@@ -135,7 +135,7 @@ export default {
         patientPic: ''
       },
       formLabelWidth: '120px',
-      pageSize: 5,
+      pageSize: 10,
       pageNum: 1,
       total: 0,
       key: 'patientName',

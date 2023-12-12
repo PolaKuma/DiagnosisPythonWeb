@@ -56,7 +56,7 @@ class User(AbstractUser):
                 username=data['username'],
                 password=make_password(data['password']),
                 usertype=data['usertype'],
-                realname=data['username'],
+                realname=data['realname'],
                 doctorno=data['doctorno'],
             )
             return {'code': 200, 'msg': user.id}
